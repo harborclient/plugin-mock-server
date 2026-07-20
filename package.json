@@ -1,0 +1,26 @@
+{
+  "name": "@harborclient/plugin-mock-server",
+  "type": "module",
+  "scripts": {
+    "release": "bash scripts/publish.sh",
+    "build": "pnpm build:main && node scripts/build.mjs",
+    "build:main": "esbuild src/main.ts --bundle --outfile=dist/main.js --format=esm --platform=neutral",
+    "build:renderer": "node scripts/build.mjs",
+    "dev": "pnpm dev:main & node scripts/build.mjs --watch",
+    "dev:main": "esbuild src/main.ts --bundle --outfile=dist/main.js --format=esm --platform=neutral --watch",
+    "dev:renderer": "node scripts/build.mjs --watch",
+    "typecheck": "tsc --noEmit",
+    "pack": "pnpm build && zip -r mock-server.hcp manifest.json README.md dist",
+    "sign": "node --experimental-strip-types scripts/sign.ts",
+    "verify": "node --experimental-strip-types scripts/verify.ts"
+  },
+  "dependencies": {
+    "@harborclient/sdk": "^1.1.24"
+  },
+  "devDependencies": {
+    "@types/node": "^26.0.1",
+    "@types/react": "^19.1.8",
+    "esbuild": "^0.25.0",
+    "typescript": "^5.8.3"
+  }
+}
