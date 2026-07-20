@@ -259,7 +259,9 @@ function parseStubs(raw) {
     return [];
   }
   return raw.filter((item) => {
-    return Boolean(item && typeof item === "object" && typeof item.id === "string");
+    return Boolean(
+      item && typeof item === "object" && typeof item.id === "string"
+    );
   });
 }
 function requireStatusStore() {
@@ -346,7 +348,10 @@ async function setMockStatus(next) {
 }
 async function setMockStubs(next) {
   const hc = requirePluginContext();
-  const withPriority = next.map((stub, index) => ({ ...stub, priority: index }));
+  const withPriority = next.map((stub, index) => ({
+    ...stub,
+    priority: index
+  }));
   await requireStubsStore().set(withPriority);
   try {
     await hc.ipc.invoke("setStubs", { stubs: withPriority });
@@ -379,7 +384,9 @@ var jsxs = build;
 function MockServerFooterIndicator() {
   const status = getMockStatusStore().useValue();
   useEffect(() => {
-    const syncDisposable = syncOnWindowFocus(getMockStatusStore(), { intervalMs: 500 });
+    const syncDisposable = syncOnWindowFocus(getMockStatusStore(), {
+      intervalMs: 500
+    });
     return () => {
       syncDisposable.dispose();
     };
@@ -43327,7 +43334,9 @@ function createDefaultStub(overrides2 = {}) {
     method: "GET",
     path: "/example",
     status: 200,
-    headers: [{ key: "Content-Type", value: "application/json", enabled: true }],
+    headers: [
+      { key: "Content-Type", value: "application/json", enabled: true }
+    ],
     body: '{\n  "ok": true\n}\n',
     delayMs: 0,
     ...rest,
@@ -43342,7 +43351,9 @@ var STUB_TEMPLATES = [
       path: "/ok",
       status: 200,
       body: '{\n  "ok": true\n}\n',
-      headers: [{ key: "Content-Type", value: "application/json", enabled: true }]
+      headers: [
+        { key: "Content-Type", value: "application/json", enabled: true }
+      ]
     }
   },
   {
@@ -43352,7 +43363,9 @@ var STUB_TEMPLATES = [
       path: "/missing",
       status: 404,
       body: '{\n  "error": "Not found"\n}\n',
-      headers: [{ key: "Content-Type", value: "application/json", enabled: true }]
+      headers: [
+        { key: "Content-Type", value: "application/json", enabled: true }
+      ]
     }
   },
   {
@@ -43363,13 +43376,24 @@ var STUB_TEMPLATES = [
       status: 503,
       delayMs: 1500,
       body: '{\n  "error": "Service unavailable"\n}\n',
-      headers: [{ key: "Content-Type", value: "application/json", enabled: true }]
+      headers: [
+        { key: "Content-Type", value: "application/json", enabled: true }
+      ]
     }
   }
 ];
 
 // src/components/MatchFields.tsx
-var METHODS = ["*", "GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"];
+var METHODS = [
+  "*",
+  "GET",
+  "POST",
+  "PUT",
+  "PATCH",
+  "DELETE",
+  "HEAD",
+  "OPTIONS"
+];
 function MatchFields({ stub, onChange: onChange2 }) {
   return /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-3", children: [
     /* @__PURE__ */ jsx(FormGroup, { label: "Method", htmlFor: "mock-stub-method", children: /* @__PURE__ */ jsx(
@@ -43463,63 +43487,77 @@ function RespondFields({ stub, onChange: onChange2 }) {
             type: "button",
             variant: "secondary",
             onClick: () => onChange2({
-              headers: [...stub.headers, { key: "", value: "", enabled: true }]
+              headers: [
+                ...stub.headers,
+                { key: "", value: "", enabled: true }
+              ]
             }),
             children: "Add header"
           }
         )
       ] }),
-      stub.headers.length === 0 ? /* @__PURE__ */ jsx("p", { className: "text-[14px] text-muted", children: "No response headers." }) : /* @__PURE__ */ jsx("div", { className: "flex flex-col gap-2", children: stub.headers.map((row, index) => /* @__PURE__ */ jsxs("div", { className: "flex flex-wrap items-center gap-2", children: [
-        /* @__PURE__ */ jsx(
-          "input",
-          {
-            type: "checkbox",
-            checked: row.enabled,
-            "aria-label": `Enable header ${row.key || index + 1}`,
-            onChange: (event) => onChange2({
-              headers: patchHeader(stub.headers, index, {
-                enabled: event.target.checked
-              })
-            })
-          }
-        ),
-        /* @__PURE__ */ jsx(
-          Input,
-          {
-            className: "min-w-[8rem] flex-1",
-            value: row.key,
-            "aria-label": `Header ${index + 1} name`,
-            placeholder: "Name",
-            onChange: (event) => onChange2({
-              headers: patchHeader(stub.headers, index, { key: event.target.value })
-            })
-          }
-        ),
-        /* @__PURE__ */ jsx(
-          Input,
-          {
-            className: "min-w-[8rem] flex-1",
-            value: row.value,
-            "aria-label": `Header ${index + 1} value`,
-            placeholder: "Value",
-            onChange: (event) => onChange2({
-              headers: patchHeader(stub.headers, index, { value: event.target.value })
-            })
-          }
-        ),
-        /* @__PURE__ */ jsx(
-          Button,
-          {
-            type: "button",
-            variant: "secondary",
-            "aria-label": `Remove header ${index + 1}`,
-            onClick: () => onChange2({
-              headers: stub.headers.filter((_3, i3) => i3 !== index)
-            }),
-            children: "Remove"
-          }
-        )
-      ] }, `header-${index}`)) })
+      stub.headers.length === 0 ? /* @__PURE__ */ jsx("p", { className: "text-[14px] text-muted", children: "No response headers." }) : /* @__PURE__ */ jsx("div", { className: "flex flex-col gap-2", children: stub.headers.map((row, index) => /* @__PURE__ */ jsxs(
+        "div",
+        {
+          className: "flex flex-wrap items-center gap-2",
+          children: [
+            /* @__PURE__ */ jsx(
+              "input",
+              {
+                type: "checkbox",
+                checked: row.enabled,
+                "aria-label": `Enable header ${row.key || index + 1}`,
+                onChange: (event) => onChange2({
+                  headers: patchHeader(stub.headers, index, {
+                    enabled: event.target.checked
+                  })
+                })
+              }
+            ),
+            /* @__PURE__ */ jsx(
+              Input,
+              {
+                className: "min-w-[8rem] flex-1",
+                value: row.key,
+                "aria-label": `Header ${index + 1} name`,
+                placeholder: "Name",
+                onChange: (event) => onChange2({
+                  headers: patchHeader(stub.headers, index, {
+                    key: event.target.value
+                  })
+                })
+              }
+            ),
+            /* @__PURE__ */ jsx(
+              Input,
+              {
+                className: "min-w-[8rem] flex-1",
+                value: row.value,
+                "aria-label": `Header ${index + 1} value`,
+                placeholder: "Value",
+                onChange: (event) => onChange2({
+                  headers: patchHeader(stub.headers, index, {
+                    value: event.target.value
+                  })
+                })
+              }
+            ),
+            /* @__PURE__ */ jsx(
+              Button,
+              {
+                type: "button",
+                variant: "secondary",
+                "aria-label": `Remove header ${index + 1}`,
+                onClick: () => onChange2({
+                  headers: stub.headers.filter((_3, i3) => i3 !== index)
+                }),
+                children: "Remove"
+              }
+            )
+          ]
+        },
+        `header-${index}`
+      )) })
     ] }),
     /* @__PURE__ */ jsx(
       FormGroup,
@@ -43547,35 +43585,59 @@ function RespondFields({ stub, onChange: onChange2 }) {
 function StubEditor({ stub, onChange: onChange2 }) {
   const [tab, setTab] = useState("match");
   return /* @__PURE__ */ jsxs("div", { className: "flex h-full min-h-0 flex-col gap-3", children: [
-    /* @__PURE__ */ jsxs("div", { className: "flex gap-2", role: "tablist", "aria-label": "Stub editor sections", children: [
-      /* @__PURE__ */ jsx(
-        "button",
-        {
-          type: "button",
-          role: "tab",
-          id: "mock-tab-match",
-          "aria-selected": tab === "match",
-          "aria-controls": "mock-panel-match",
-          className: `cursor-pointer rounded border px-3 py-1 text-[14px] ${tab === "match" ? "border-accent bg-panel text-text" : "border-separator bg-control text-muted"}`,
-          onClick: () => setTab("match"),
-          children: "Match"
-        }
-      ),
-      /* @__PURE__ */ jsx(
-        "button",
-        {
-          type: "button",
-          role: "tab",
-          id: "mock-tab-respond",
-          "aria-selected": tab === "respond",
-          "aria-controls": "mock-panel-respond",
-          className: `cursor-pointer rounded border px-3 py-1 text-[14px] ${tab === "respond" ? "border-accent bg-panel text-text" : "border-separator bg-control text-muted"}`,
-          onClick: () => setTab("respond"),
-          children: "Respond"
-        }
-      )
-    ] }),
-    /* @__PURE__ */ jsx("div", { className: "min-h-0 flex-1 overflow-auto", children: tab === "match" ? /* @__PURE__ */ jsx("div", { role: "tabpanel", id: "mock-panel-match", "aria-labelledby": "mock-tab-match", children: /* @__PURE__ */ jsx(MatchFields, { stub, onChange: onChange2 }) }) : /* @__PURE__ */ jsx("div", { role: "tabpanel", id: "mock-panel-respond", "aria-labelledby": "mock-tab-respond", children: /* @__PURE__ */ jsx(RespondFields, { stub, onChange: onChange2 }) }) })
+    /* @__PURE__ */ jsxs(
+      "div",
+      {
+        className: "flex gap-2",
+        role: "tablist",
+        "aria-label": "Stub editor sections",
+        children: [
+          /* @__PURE__ */ jsx(
+            "button",
+            {
+              type: "button",
+              role: "tab",
+              id: "mock-tab-match",
+              "aria-selected": tab === "match",
+              "aria-controls": "mock-panel-match",
+              className: `cursor-pointer rounded border px-3 py-1 text-[14px] ${tab === "match" ? "border-accent bg-panel text-text" : "border-separator bg-control text-muted"}`,
+              onClick: () => setTab("match"),
+              children: "Match"
+            }
+          ),
+          /* @__PURE__ */ jsx(
+            "button",
+            {
+              type: "button",
+              role: "tab",
+              id: "mock-tab-respond",
+              "aria-selected": tab === "respond",
+              "aria-controls": "mock-panel-respond",
+              className: `cursor-pointer rounded border px-3 py-1 text-[14px] ${tab === "respond" ? "border-accent bg-panel text-text" : "border-separator bg-control text-muted"}`,
+              onClick: () => setTab("respond"),
+              children: "Respond"
+            }
+          )
+        ]
+      }
+    ),
+    /* @__PURE__ */ jsx("div", { className: "min-h-0 flex-1 overflow-auto", children: tab === "match" ? /* @__PURE__ */ jsx(
+      "div",
+      {
+        role: "tabpanel",
+        id: "mock-panel-match",
+        "aria-labelledby": "mock-tab-match",
+        children: /* @__PURE__ */ jsx(MatchFields, { stub, onChange: onChange2 })
+      }
+    ) : /* @__PURE__ */ jsx(
+      "div",
+      {
+        role: "tabpanel",
+        id: "mock-panel-respond",
+        "aria-labelledby": "mock-tab-respond",
+        children: /* @__PURE__ */ jsx(RespondFields, { stub, onChange: onChange2 })
+      }
+    ) })
   ] });
 }
 
@@ -43701,43 +43763,59 @@ function moveStub(stubs, index, delta) {
   next.splice(target, 0, item);
   return next.map((stub, priority) => ({ ...stub, priority }));
 }
-function StubList({ stubs, selectedId, onSelect, onChange: onChange2, onAdd }) {
+function StubList({
+  stubs,
+  selectedId,
+  onSelect,
+  onChange: onChange2,
+  onAdd
+}) {
   return /* @__PURE__ */ jsxs("div", { className: "flex h-full min-h-0 flex-col gap-2", children: [
     /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between gap-2", children: [
       /* @__PURE__ */ jsx("h4", { className: "text-[14px] font-medium text-text", children: "Stubs" }),
       /* @__PURE__ */ jsx(Button, { type: "button", variant: "secondary", onClick: onAdd, children: "Add stub" })
     ] }),
-    /* @__PURE__ */ jsx("div", { className: "min-h-0 flex-1 space-y-2 overflow-auto", role: "list", "aria-label": "Mock stubs", children: stubs.length === 0 ? /* @__PURE__ */ jsx("p", { className: "text-[14px] text-muted", children: "No stubs yet. Add one to start mocking." }) : stubs.map((stub, index) => /* @__PURE__ */ jsx("div", { role: "listitem", children: /* @__PURE__ */ jsx(
-      StubListItem,
+    /* @__PURE__ */ jsx(
+      "div",
       {
-        stub,
-        selected: stub.id === selectedId,
-        canMoveUp: index > 0,
-        canMoveDown: index < stubs.length - 1,
-        onSelect: () => onSelect(stub.id),
-        onToggleEnabled: (enabled) => {
-          onChange2(
-            stubs.map((row) => row.id === stub.id ? { ...row, enabled } : row)
-          );
-        },
-        onMoveUp: () => onChange2(moveStub(stubs, index, -1)),
-        onMoveDown: () => onChange2(moveStub(stubs, index, 1)),
-        onDuplicate: () => {
-          const copy = {
-            ...stub,
-            id: typeof crypto !== "undefined" && typeof crypto.randomUUID === "function" ? crypto.randomUUID() : `stub-${Date.now()}`,
-            path: stub.path.endsWith("-copy") ? stub.path : `${stub.path}-copy`
-          };
-          const next = [...stubs];
-          next.splice(index + 1, 0, copy);
-          onChange2(next.map((row, priority) => ({ ...row, priority })));
-          onSelect(copy.id);
-        },
-        onDelete: () => {
-          onChange2(stubs.filter((row) => row.id !== stub.id));
-        }
+        className: "min-h-0 flex-1 space-y-2 overflow-auto",
+        role: "list",
+        "aria-label": "Mock stubs",
+        children: stubs.length === 0 ? /* @__PURE__ */ jsx("p", { className: "text-[14px] text-muted", children: "No stubs yet. Add one to start mocking." }) : stubs.map((stub, index) => /* @__PURE__ */ jsx("div", { role: "listitem", children: /* @__PURE__ */ jsx(
+          StubListItem,
+          {
+            stub,
+            selected: stub.id === selectedId,
+            canMoveUp: index > 0,
+            canMoveDown: index < stubs.length - 1,
+            onSelect: () => onSelect(stub.id),
+            onToggleEnabled: (enabled) => {
+              onChange2(
+                stubs.map(
+                  (row) => row.id === stub.id ? { ...row, enabled } : row
+                )
+              );
+            },
+            onMoveUp: () => onChange2(moveStub(stubs, index, -1)),
+            onMoveDown: () => onChange2(moveStub(stubs, index, 1)),
+            onDuplicate: () => {
+              const copy = {
+                ...stub,
+                id: typeof crypto !== "undefined" && typeof crypto.randomUUID === "function" ? crypto.randomUUID() : `stub-${Date.now()}`,
+                path: stub.path.endsWith("-copy") ? stub.path : `${stub.path}-copy`
+              };
+              const next = [...stubs];
+              next.splice(index + 1, 0, copy);
+              onChange2(next.map((row, priority) => ({ ...row, priority })));
+              onSelect(copy.id);
+            },
+            onDelete: () => {
+              onChange2(stubs.filter((row) => row.id !== stub.id));
+            }
+          }
+        ) }, stub.id))
       }
-    ) }, stub.id)) })
+    )
   ] });
 }
 
@@ -43747,7 +43825,9 @@ function MockServerPanel({ hc }) {
   const [portInput, setPortInput] = useState("0");
   const [status, setStatus] = useState(getMockStatus());
   const [stubs, setStubs] = useState(getMockStubs());
-  const [selectedId, setSelectedId] = useState(getMockStubs()[0]?.id ?? null);
+  const [selectedId, setSelectedId] = useState(
+    getMockStubs()[0]?.id ?? null
+  );
   const [error, setError] = useState(getMockError());
   const [busy, setBusy] = useState(false);
   const refreshStatus = useCallback(async () => {
@@ -43781,10 +43861,13 @@ function MockServerPanel({ hc }) {
     [stubs, selectedId]
   );
   const baseUrl = status.running && status.port !== void 0 ? `http://localhost:${status.port}` : null;
-  const handleStubsChange = useCallback(async (next) => {
-    setMockError(null);
-    await setMockStubs(next);
-  }, []);
+  const handleStubsChange = useCallback(
+    async (next) => {
+      setMockError(null);
+      await setMockStubs(next);
+    },
+    []
+  );
   const handleStart = useCallback(async () => {
     setBusy(true);
     setMockError(null);
@@ -43796,7 +43879,11 @@ function MockServerPanel({ hc }) {
       });
       await setMockStatus(result);
       const url = `http://localhost:${result.port}`;
-      await hc.commands.execute("harborclient:setGlobalVariable", "mockBaseUrl", url);
+      await hc.commands.execute(
+        "harborclient:setGlobalVariable",
+        "mockBaseUrl",
+        url
+      );
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       setMockError(message);
@@ -43844,7 +43931,9 @@ function MockServerPanel({ hc }) {
         return;
       }
       void handleStubsChange(
-        stubs.map((stub) => stub.id === selectedStub.id ? { ...stub, ...patch } : stub)
+        stubs.map(
+          (stub) => stub.id === selectedStub.id ? { ...stub, ...patch } : stub
+        )
       );
     },
     [handleStubsChange, selectedStub, stubs]
@@ -43866,7 +43955,8 @@ function MockServerPanel({ hc }) {
         stubs.length,
         " stub",
         stubs.length === 1 ? "" : "s",
-        " \xB7 ",
+        " \xB7",
+        " ",
         status.hitCount,
         " hit",
         status.hitCount === 1 ? "" : "s"
@@ -43935,7 +44025,15 @@ function MockServerPanel({ hc }) {
       stubs.length === 0 ? /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-3 rounded border border-separator bg-panel p-4", children: [
         /* @__PURE__ */ jsx("p", { className: "text-[14px] text-text", children: "Add a stub to return canned responses from the mock server." }),
         /* @__PURE__ */ jsxs("div", { className: "flex flex-wrap gap-2", children: [
-          /* @__PURE__ */ jsx(Button, { type: "button", variant: "primary", onClick: handleAddStub, children: "Add stub" }),
+          /* @__PURE__ */ jsx(
+            Button,
+            {
+              type: "button",
+              variant: "primary",
+              onClick: handleAddStub,
+              children: "Add stub"
+            }
+          ),
           STUB_TEMPLATES.map((template) => /* @__PURE__ */ jsx(
             Button,
             {
@@ -43958,7 +44056,13 @@ function MockServerPanel({ hc }) {
             onAdd: handleAddStub
           }
         ),
-        selectedStub ? /* @__PURE__ */ jsx(StubEditor, { stub: selectedStub, onChange: handleSelectedPatch }) : /* @__PURE__ */ jsx("p", { className: "text-[14px] text-muted", children: "Select a stub to edit." })
+        selectedStub ? /* @__PURE__ */ jsx(
+          StubEditor,
+          {
+            stub: selectedStub,
+            onChange: handleSelectedPatch
+          }
+        ) : /* @__PURE__ */ jsx("p", { className: "text-[14px] text-muted", children: "Select a stub to edit." })
       ] })
     ] }) })
   ] }) });
