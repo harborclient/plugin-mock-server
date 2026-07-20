@@ -1,4 +1,4 @@
-// node_modules/.pnpm/@harborclient+sdk@1.1.24_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_20832a5f7d7bd9c9c76cb9ed7d5bf061/node_modules/@harborclient/sdk/dist/runtime-utils.js
+// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/runtime-utils.js
 var LOG_LEVEL_RANK = {
   debug: 0,
   info: 1,
@@ -69,7 +69,9 @@ function methodMatches(stubMethod, requestMethod) {
   return stub === "*" || stub === method;
 }
 function findMatchingStub(stubs2, request) {
-  const ordered = [...stubs2].sort((a, b) => a.priority - b.priority || a.id.localeCompare(b.id));
+  const ordered = [...stubs2].sort(
+    (a, b) => a.priority - b.priority || a.id.localeCompare(b.id)
+  );
   return ordered.find(
     (stub) => stub.enabled && methodMatches(stub.method, request.method) && pathMatches(stub.path, request.path)
   );
@@ -175,9 +177,7 @@ function activate(hc) {
       return currentStatus();
     })
   );
-  hc.subscriptions.push(
-    hc.ipc.handle("status", async () => currentStatus())
-  );
+  hc.subscriptions.push(hc.ipc.handle("status", async () => currentStatus()));
   hc.subscriptions.push(
     hc.ipc.handle("getStubs", async () => withPriorities(stubs))
   );

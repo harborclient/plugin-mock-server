@@ -1,4 +1,4 @@
-// node_modules/.pnpm/@harborclient+sdk@1.1.24_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_20832a5f7d7bd9c9c76cb9ed7d5bf061/node_modules/@harborclient/sdk/dist/runtime/reactHost.js
+// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/runtime/reactHost.js
 var HOST_REACT_GLOBAL_KEY = "__HARBORCLIENT_HOST_REACT__";
 var HOST_REACT_DOM_GLOBAL_KEY = "__HARBORCLIENT_HOST_REACT_DOM__";
 var hostReact = null;
@@ -52,12 +52,12 @@ function requireHostReactDom() {
   return hostReactDom;
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.24_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_20832a5f7d7bd9c9c76cb9ed7d5bf061/node_modules/@harborclient/sdk/dist/runtime/index.js
+// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/runtime/index.js
 function installReact(react) {
   setHostReact(react);
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.24_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_20832a5f7d7bd9c9c76cb9ed7d5bf061/node_modules/@harborclient/sdk/dist/runtime/react.js
+// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/runtime/react.js
 function hook(name2) {
   const react = requireHostReact();
   const fn = react[name2];
@@ -147,7 +147,7 @@ var defaultExport = new Proxy(reactNamespace, {
   }
 });
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.24_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_20832a5f7d7bd9c9c76cb9ed7d5bf061/node_modules/@harborclient/sdk/dist/runtime/store.js
+// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/runtime/store.js
 function createExternalStore(initial2) {
   let state = initial2;
   const listeners = /* @__PURE__ */ new Set();
@@ -366,7 +366,7 @@ function setMockError(message) {
   errorStore.setState(message);
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.24_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_20832a5f7d7bd9c9c76cb9ed7d5bf061/node_modules/@harborclient/sdk/dist/runtime/jsx-runtime.js
+// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/runtime/jsx-runtime.js
 var Fragment = Symbol.for("@harborclient/sdk.Fragment");
 function build(type, props, key) {
   const react = requireHostReact();
@@ -403,7 +403,7 @@ function MockServerFooterIndicator() {
   ] });
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.24_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_20832a5f7d7bd9c9c76cb9ed7d5bf061/node_modules/@harborclient/sdk/dist/clipboard.js
+// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/clipboard.js
 async function copyToClipboard(hc, text2, options) {
   await navigator.clipboard.writeText(text2);
   if (options?.toast) {
@@ -3680,12 +3680,12 @@ var getDefaultConfig = () => {
 };
 var twMerge = /* @__PURE__ */ createTailwindMerge(getDefaultConfig);
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.24_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_20832a5f7d7bd9c9c76cb9ed7d5bf061/node_modules/@harborclient/sdk/dist/components/utils.js
+// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/utils.js
 function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.24_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_20832a5f7d7bd9c9c76cb9ed7d5bf061/node_modules/@harborclient/sdk/dist/components/FieldError/index.js
+// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/FieldError/index.js
 function spacingClasses(spacing) {
   switch (spacing) {
     case "section":
@@ -3703,7 +3703,7 @@ function FieldError({ children, spacing = "field", roleAlert = true, className, 
   return jsx("p", { ...props, className: cn("hc-field-error text-[14px] text-danger", spacingClasses(spacing), className), role: roleAlert ? "alert" : void 0, children });
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.24_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_20832a5f7d7bd9c9c76cb9ed7d5bf061/node_modules/@harborclient/sdk/dist/components/Button/index.js
+// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/Button/index.js
 var BUTTON_BASE = "inline-flex cursor-pointer items-center rounded-full app-no-drag";
 var VARIANT_CLASSES = {
   primary: cn(BUTTON_BASE, "min-h-[32px] justify-center border border-transparent bg-accent px-3 py-1 text-[15px] font-medium text-white shadow-sm hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"),
@@ -3718,7 +3718,7 @@ function Button({ variant = "primary", className, type = "button", innerRef, ...
   return jsx("button", { ref: innerRef, type, className: cn("hc-button", VARIANT_CLASSES[variant], className), ...props });
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.24_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_20832a5f7d7bd9c9c76cb9ed7d5bf061/node_modules/@harborclient/sdk/dist/components/forms/classes.js
+// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/forms/classes.js
 var field = "rounded-lg border border-separator bg-field px-2.5 py-1.5 text-text app-no-drag";
 var surfaceField = "w-full rounded-lg border border-separator bg-field px-3 py-2.5 text-[15px] text-text";
 function mergeFieldClasses(variant, className, rootClass) {
@@ -3726,23 +3726,23 @@ function mergeFieldClasses(variant, className, rootClass) {
   return result === "" ? void 0 : result;
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.24_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_20832a5f7d7bd9c9c76cb9ed7d5bf061/node_modules/@harborclient/sdk/dist/components/forms/Input.js
+// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/forms/Input.js
 function Input({ ref, variant = "control", type, className, ...props }) {
   const resolvedVariant = type === "checkbox" || type === "radio" ? "plain" : variant;
   return jsx("input", { ref, type, className: mergeFieldClasses(resolvedVariant, className, "hc-input"), ...props });
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.24_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_20832a5f7d7bd9c9c76cb9ed7d5bf061/node_modules/@harborclient/sdk/dist/components/forms/Select.js
+// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/forms/Select.js
 function Select({ ref, variant = "control", className, children, ...props }) {
   return jsx("select", { ref, className: mergeFieldClasses(variant, className, "hc-select"), ...props, children });
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.24_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_20832a5f7d7bd9c9c76cb9ed7d5bf061/node_modules/@harborclient/sdk/dist/runtime/react-dom.js
+// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/runtime/react-dom.js
 function createPortal(children, container, key) {
   return requireHostReactDom().createPortal(children, container, key);
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.24_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_20832a5f7d7bd9c9c76cb9ed7d5bf061/node_modules/@harborclient/sdk/dist/components/portalToBody.js
+// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/portalToBody.js
 function portalToBody(node) {
   if (typeof document === "undefined") {
     throw new Error("portalToBody requires a DOM document");
@@ -7609,7 +7609,7 @@ var FontAwesomeIcon = React.forwardRef((props, ref) => {
 FontAwesomeIcon.displayName = "FontAwesomeIcon";
 var DEFAULT_CLASSNAMES = `${LAYER_CLASSES.default} ${STYLE_CLASSES.fixedWidth}`;
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.24_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_20832a5f7d7bd9c9c76cb9ed7d5bf061/node_modules/@harborclient/sdk/dist/components/FaIcon/index.js
+// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/FaIcon/index.js
 function FaIcon({ icon: icon3, className = "h-3.5 w-3.5", title, ...props }) {
   return createElement(FontAwesomeIcon, {
     ...props,
@@ -35254,7 +35254,7 @@ var ReactCodeMirror = /* @__PURE__ */ forwardRef2((props, ref) => {
 ReactCodeMirror.displayName = "CodeMirror";
 var esm_default = ReactCodeMirror;
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.24_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_20832a5f7d7bd9c9c76cb9ed7d5bf061/node_modules/@harborclient/sdk/dist/ui/codeEditorSettings.js
+// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/ui/codeEditorSettings.js
 var DEFAULT_CODE_EDITOR_FONT_SIZE = "16px";
 var MIN_CODE_EDITOR_FONT_SIZE_PX = 14;
 var DEFAULT_CODE_EDITOR_SETUP = {
@@ -37172,7 +37172,7 @@ var e3 = { airline: { airline: [{ name: `Aegean Airlines`, iataCode: `A3` }, { n
 // node_modules/.pnpm/@faker-js+faker@10.5.0/node_modules/@faker-js/faker/dist/locale/en.js
 var r4 = new yt({ locale: [e3, Ct] });
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.24_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_20832a5f7d7bd9c9c76cb9ed7d5bf061/node_modules/@harborclient/sdk/dist/variables/dynamic.js
+// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/variables/dynamic.js
 function categoryImageUrl(category) {
   return r4.image.urlLoremFlickr({ category });
 }
@@ -37672,7 +37672,7 @@ function getDynamicVariableDescription(key) {
 }
 var DYNAMIC_VARIABLE_NAMES = Object.keys(DYNAMIC_VARIABLES).sort();
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.24_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_20832a5f7d7bd9c9c76cb9ed7d5bf061/node_modules/@harborclient/sdk/dist/variables/tokens.js
+// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/variables/tokens.js
 var VARIABLE_NAME_CHARS = "\\w$.-";
 var VARIABLE_TOKEN_PATTERN = new RegExp(`\\{\\{\\s*([${VARIABLE_NAME_CHARS}]+)(\\s*\\|\\s*[${VARIABLE_NAME_CHARS}]+)*\\s*\\}\\}`, "g");
 var VALID_NAME_PATTERN = new RegExp(`^[${VARIABLE_NAME_CHARS}]+$`);
@@ -37694,7 +37694,7 @@ function resolveVariable(key, variables) {
   return variableLookup(variables).get(key);
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.24_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_20832a5f7d7bd9c9c76cb9ed7d5bf061/node_modules/@harborclient/sdk/dist/components/VariableTooltip/dom.js
+// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/VariableTooltip/dom.js
 var COPY_ICON_PATH = "M208 0H332.1c12.7 0 24.9 5.1 33.9 14.1l67.9 67.9c9 9 14.1 21.2 14.1 33.9V336c0 26.5-21.5 48-48 48H208c-26.5 0-48-21.5-48-48V48c0-26.5 21.5-48 48-48zM48 128h80v64H64v256h192v-32h64v48c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V176c0-26.5 21.5-48 48-48z";
 var CHECK_ICON_PATH = "M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z";
 function createTooltipIcon(path) {
@@ -37765,7 +37765,7 @@ function buildVariableTooltipDom(key, variables, onEditVariable) {
   return dom2;
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.24_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_20832a5f7d7bd9c9c76cb9ed7d5bf061/node_modules/@harborclient/sdk/dist/components/VariableTooltip/VariableTooltipValue.js
+// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/VariableTooltip/VariableTooltipValue.js
 function VariableTooltipValue({ value, variableKey, muted, onClose }) {
   const [copied, setCopied] = useState(false);
   const handleCopy = () => {
@@ -37781,7 +37781,7 @@ function VariableTooltipValue({ value, variableKey, muted, onClose }) {
   }, onClick: onClose, children: jsx(FaIcon, { icon: faXmark, className: "h-4 w-4" }) })] });
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.24_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_20832a5f7d7bd9c9c76cb9ed7d5bf061/node_modules/@harborclient/sdk/dist/components/CodeEditor/config.js
+// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/CodeEditor/config.js
 var DEFAULT_CODE_EDITOR_CONFIG = {
   theme: "default",
   setup: DEFAULT_CODE_EDITOR_SETUP,
@@ -37816,7 +37816,7 @@ function useCodeEditorConfig() {
   return contextValue ?? storeValue;
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.24_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_20832a5f7d7bd9c9c76cb9ed7d5bf061/node_modules/@harborclient/sdk/dist/components/CodeEditor/editorChrome.js
+// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/CodeEditor/editorChrome.js
 var lightHighlight = HighlightStyle.define([
   { tag: tags.propertyName, color: "#881391" },
   { tag: tags.string, color: "#c41a16" },
@@ -37981,7 +37981,7 @@ function createBuiltInSyntaxHighlighting(isDark) {
   return syntaxHighlighting(isDark ? darkHighlight : lightHighlight);
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.24_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_20832a5f7d7bd9c9c76cb9ed7d5bf061/node_modules/@harborclient/sdk/dist/components/CodeEditor/slashCommandHighlighter.js
+// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/CodeEditor/slashCommandHighlighter.js
 function slashCommandHighlightPattern(commands) {
   const names = commands.map((entry) => entry.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
   if (names.length === 0) {
@@ -42025,7 +42025,7 @@ var xcodeDarkInit = (options) => {
 };
 var xcodeDark = xcodeDarkInit();
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.24_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_20832a5f7d7bd9c9c76cb9ed7d5bf061/node_modules/@harborclient/sdk/dist/components/CodeEditor/themes.js
+// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/CodeEditor/themes.js
 var themeExtensions = {
   dracula,
   githubLight,
@@ -42042,7 +42042,7 @@ function getCodeEditorThemeExtension(value) {
   return themeExtensions[value];
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.24_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_20832a5f7d7bd9c9c76cb9ed7d5bf061/node_modules/@harborclient/sdk/dist/components/CodeEditor/renderHighlightedPlaceholder.js
+// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/CodeEditor/renderHighlightedPlaceholder.js
 var renderCache = /* @__PURE__ */ new Map();
 function buildRenderCacheKey(text2, options) {
   const slashNames = options.slashCommands?.map((command2) => command2.name).join(",") ?? "";
@@ -42124,7 +42124,7 @@ function renderHighlightedPlaceholderDom(text2, options) {
   return wrap;
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.24_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_20832a5f7d7bd9c9c76cb9ed7d5bf061/node_modules/@harborclient/sdk/dist/components/CodeEditor/syntaxHighlightedPlaceholder.js
+// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/CodeEditor/syntaxHighlightedPlaceholder.js
 var SyntaxHighlightedPlaceholderWidget = class extends WidgetType {
   text;
   options;
@@ -42291,7 +42291,7 @@ function createSyntaxHighlightedPlaceholder(text2, options) {
   ];
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.24_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_20832a5f7d7bd9c9c76cb9ed7d5bf061/node_modules/@harborclient/sdk/dist/components/CodeEditor/syntaxLinters.js
+// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/CodeEditor/syntaxLinters.js
 var LINT_IDLE_TIMEOUT_MS = 500;
 function scheduleIdle(callback, timeout) {
   if (typeof requestIdleCallback === "function") {
@@ -42331,7 +42331,7 @@ function createJsonSyntaxLinter() {
   return linter(jsonParseLinter());
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.24_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_20832a5f7d7bd9c9c76cb9ed7d5bf061/node_modules/@harborclient/sdk/dist/components/CodeEditor/index.js
+// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/CodeEditor/index.js
 function clampSelection(docLength, selection2) {
   const maxOffset2 = Math.max(0, docLength);
   return {
@@ -43196,7 +43196,7 @@ function CodeEditor({ value, onChange: onChange2, language: language2 = "text", 
   }, children: "Edit value" }) : null] }) : null, selectionActionToolbarNode ? portalToBody(selectionActionToolbarNode) : null] });
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.24_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_20832a5f7d7bd9c9c76cb9ed7d5bf061/node_modules/@harborclient/sdk/dist/components/enhanceControl.js
+// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/enhanceControl.js
 var REACT_FRAGMENT_TYPE = Symbol.for("react.fragment");
 var FORM_CONTROL_TAGS = /* @__PURE__ */ new Set(["button", "input", "select", "textarea"]);
 function getSingleChild(node) {
@@ -43258,7 +43258,7 @@ function enhanceControl(child, options) {
   return applyAriaProps(child, options);
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.24_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_20832a5f7d7bd9c9c76cb9ed7d5bf061/node_modules/@harborclient/sdk/dist/components/FormGroup/index.js
+// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/FormGroup/index.js
 function borderedWrapperClasses(bordered, layoutClasses, extra) {
   const frame = bordered ? "p-4 border border-separator rounded-md" : "";
   const base2 = `hc-form-group ${layoutClasses} ${frame}`.trim();

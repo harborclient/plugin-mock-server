@@ -1,11 +1,14 @@
 {
   "id": "com.harborclient.plugins.mock-server",
   "name": "Mock Server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "HarborClient",
   "summary": "Run a local WireMock-style HTTP mock server with method/path stubs, custom status codes, headers, bodies, and delays.",
   "description": "README.md",
-  "categories": ["mock", "requests"],
+  "categories": [
+    "mock",
+    "requests"
+  ],
   "screenshots": [
     "https://raw.githubusercontent.com/harborclient/plugin-mock-server/main/screenshot.png"
   ],
@@ -14,7 +17,12 @@
   },
   "renderer": "dist/renderer.js",
   "main": "dist/main.js",
-  "permissions": ["ui", "ipc", "server", "storage"],
+  "permissions": [
+    "ui",
+    "ipc",
+    "server",
+    "storage"
+  ],
   "contributes": {
     "footerPanels": [
       {
