@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "com.harborclient.plugins.mock-server",
-  "pluginVersion": "1.0.1",
+  "pluginVersion": "1.0.2",
   "algorithm": "Ed25519",
   "files": [
     {
@@ -18,7 +18,7 @@
     },
     {
       "path": "manifest.json",
-      "sha256": "09966c52d47086030068779bb737e7ca05d1a2186049bad9bc140439009837f8"
+      "sha256": "3fa76c824197d16f7abf8b56c634492f6d1d93e243ac26ce7466292d0aed2639"
     },
     {
       "path": "package.json",
@@ -110,5 +110,5 @@
     }
   ],
   "keyId": "com.harborclient.plugins.mock-server",
-  "signature": "Sw5hrPicb7l2I81p8xbJE2xJ72siWuFDg45Ibv8UvDhkQ48SH94thVNsi5kvHkEcldqXGyCVqV/4rd+RLNCSBg=="
+  "signature": "bq7dv2gDOlQX19kE6SQTZVeqygfkXnyfWn5gY2S90txQlNIP6lH8Yd5DpOhXpHCH4LSwJY5f4cqccgulUjl5DQ=="
 }

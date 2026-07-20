@@ -1,7 +1,7 @@
 {
   "id": "com.harborclient.plugins.mock-server",
   "name": "Mock Server",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "HarborClient",
   "summary": "Run a local WireMock-style HTTP mock server with method/path stubs, custom status codes, headers, bodies, and delays.",
   "description": "README.md",
