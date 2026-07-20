@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "pluginId": "com.harborclient.plugins.mock-server",
+  "pluginVersion": "1.0.1",
+  "algorithm": "Ed25519",
+  "files": [
+    {
+      "path": ".gitignore",
+      "sha256": "88ad380decbd9a1a6659c573833c96932dab32e7e0e88fa3353c98f758cd10b3"
+    },
+    {
+      "path": "dist/main.js",
+      "sha256": "b16d8d78f251d25156d5b597543460fc02c71a275622ef5ba2cbb3b0df4dab67"
+    },
+    {
+      "path": "dist/renderer.js",
+      "sha256": "fc2ba5845500e6821a2561416f1e57363c079ac9c5909e36a995459caa07a827"
+    },
+    {
+      "path": "manifest.json",
+      "sha256": "09966c52d47086030068779bb737e7ca05d1a2186049bad9bc140439009837f8"
+    },
+    {
+      "path": "package.json",
+      "sha256": "21ec5cd45e4d2597fbcf8d0bb6e9a716b4becfd23b7f2f536597129185b293da"
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "sha256": "7ed45210744f9ec9c3cdf748c2cf2c8ed4e665162f872475f0f323a372da8cc0"
+    },
+    {
+      "path": "README.md",
+      "sha256": "b504fffae4a9053162b2892b68faa803b9a2e29b5020ed6afa0c1437a86d8533"
+    },
+    {
+      "path": "screenshot.png",
+      "sha256": "3f477f678a052a65159a15270b231d9928f6fac61c8d5f7957f8e24556cb27fa"
+    },
+    {
+      "path": "scripts/build.mjs",
+      "sha256": "f8750832ae0f94fdf1313b95b1b787637b5a98e69b1dcaa007a93cfbe486819e"
+    },
+    {
+      "path": "scripts/publish.sh",
+      "sha256": "8a0a899d425d2d3c67f5560a54a92f080225fa022e70eac920f14c963f825c69"
+    },
+    {
+      "path": "scripts/sign.ts",
+      "sha256": "dc21f6daa2c0d454b53cc719524f41669c1f1a0319b80b50dc1f0b3fa3f796e3"
+    },
+    {
+      "path": "scripts/verify.ts",
+      "sha256": "555f897860b881817f6aa66a933a38fb31388b461b8fa1e9e9b6126b67bc18e0"
+    },
+    {
+      "path": "src/components/MatchFields.tsx",
+      "sha256": "654dc843dc1a8b70c0b0c6ddab7472f4eb2ebf0e52b1fbaac17d409598771a2d"
+    },
+    {
+      "path": "src/components/MockServerFooterIndicator.tsx",
+      "sha256": "2198304e51e7c89a814bd9911762e69a70e74c02e39919c394c8b0e94464765d"
+    },
+    {
+      "path": "src/components/MockServerPanel.tsx",
+      "sha256": "ca76129d322369f7dfd9a9cfdab356dc0a2e04247e70bede0af8018cc2ec833e"
+    },
+    {
+      "path": "src/components/RespondFields.tsx",
+      "sha256": "c8a4134c8919f79e57b436afea2cb273f967fb5a401e948cbb047741a291b2b7"
+    },
+    {
+      "path": "src/components/StubEditor.tsx",
+      "sha256": "499025e19719f0b227776c64c8e4947c39c63f512bccbd161116c8847ae29cbb"
+    },
+    {
+      "path": "src/components/StubList.tsx",
+      "sha256": "7004a915081dfdff31174d405898b6438a61027382d76d9dd42234acd61cd1b3"
+    },
+    {
+      "path": "src/components/StubListItem.tsx",
+      "sha256": "622263d0ca100bb44b8dab59118cdeba7c38ac0a455fea447b05b14ab34d5d8d"
+    },
+    {
+      "path": "src/main.ts",
+      "sha256": "43bebb4381f86a2f8a1750b61d7189fd8dd7ad106165430bb75f72abe4754c3f"
+    },
+    {
+      "path": "src/matchStub.test.ts",
+      "sha256": "c624c16a619b0919e204def8f05e12895e99dcdb06c9b9ea94c82acd1ee86cff"
+    },
+    {
+      "path": "src/matchStub.ts",
+      "sha256": "798e2959ab168881be419f62b34954da627c42e6243b32a4188235543060fc8b"
+    },
+    {
+      "path": "src/renderer.tsx",
+      "sha256": "aba3aaccf0d74873886e756e54549ab26628050aa601a26f68a6ea5ca86dd747"
+    },
+    {
+      "path": "src/state.ts",
+      "sha256": "becf198e7b960c9e61f03bf149326168a9740a8f8b3ce2fd2b2b0989e5b7d2ac"
+    },
+    {
+      "path": "src/types.ts",
+      "sha256": "316d6457f4d4d5c3066e3c3c3d5e9c1eeb340596b8f227cabe0d86ec45a06705"
+    },
+    {
+      "path": "tsconfig.json",
+      "sha256": "392ecb14938546fa26c175c212119962c65f5263d8e1919b2c61d67491f1c684"
+    }
+  ],
+  "keyId": "com.harborclient.plugins.mock-server",
+  "signature": "Sw5hrPicb7l2I81p8xbJE2xJ72siWuFDg45Ibv8UvDhkQ48SH94thVNsi5kvHkEcldqXGyCVqV/4rd+RLNCSBg=="
+}
