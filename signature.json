@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "com.harborclient.plugins.mock-server",
-  "pluginVersion": "1.0.3",
+  "pluginVersion": "1.0.4",
   "algorithm": "Ed25519",
   "files": [
     {
@@ -10,23 +10,23 @@
     },
     {
       "path": "dist/main.js",
-      "sha256": "9b7c8c8d11d33698276c3c9dc61cd2dd2bfdd3b579a04b834513572b8eceac87"
+      "sha256": "3381bf4c197bdeef80a7c7be980aad3a875146a350b5875cd60a47a5db6811e3"
     },
     {
       "path": "dist/renderer.js",
-      "sha256": "9f875a9afd7bb1f20478b294d08817f09e28468048149d020c3fdb69d64766f9"
+      "sha256": "bfaf7fc8e157a0d41f98864199fd3efcceecba501a8fab704b334ca42fb14a0b"
     },
     {
       "path": "manifest.json",
-      "sha256": "a61d1d2f6cb67dd8bc177ec2f53f051b98738b8a7a2039faf69a051c9cb0d1c9"
+      "sha256": "163a332a3dd984755fd0c992d635cdd8fb8f86cf9cd5952dd61d02a40d292569"
     },
     {
       "path": "package.json",
-      "sha256": "5e1db55019497a06063707208d0f2fe9c93f21f43e54c02b7f4289e82f193130"
+      "sha256": "928ac11a64464904b69cbe41b69245b3fc38267f5083e9d0677226470114e663"
     },
     {
       "path": "pnpm-lock.yaml",
-      "sha256": "9b7e6ba31ab4b870d8af37dfd8a6b0df2f644717cb1a0537572c0b56fdb29cb8"
+      "sha256": "6f62371fcca6c18bef4bd8b23c9e70b119c1684db011ad3d441b1d683cdeea81"
     },
     {
       "path": "README.md",
@@ -126,5 +126,5 @@
     }
   ],
   "keyId": "com.harborclient.plugins.mock-server",
-  "signature": "qFMJ4wr6BOlTXW7QDP37+UqcZryixlzRLmAMpvozmPr93cWr+1Kj1AAV2/VKrEH7qWGAckXQroKHg4X0n+c7Dw=="
+  "signature": "2VKsviksgCjt0Ac5ZVMdi95BZBTz45qaQSFD2NRciu/9r1wgNOBCDiUxNj2mzDm85QqhGEKegH6FHhbesikCBg=="
 }
