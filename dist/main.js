@@ -1,4 +1,4 @@
-// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/runtime-utils.js
+// node_modules/.pnpm/@harborclient+sdk@file+..+..+..+..+..+..+..+tmp+harborclient-sdk-1.1.27.tgz_@babel+runt_c8eb3f045fa45f80e66defb123194984/node_modules/@harborclient/sdk/dist/runtime-utils.js
 var LOG_LEVEL_RANK = {
   debug: 0,
   info: 1,
@@ -77,6 +77,84 @@ function findMatchingStub(stubs2, request) {
   );
 }
 
+// src/scriptHelpers.ts
+function hasExecutableScript(source) {
+  const withoutBlockComments = source.replace(/\/\*[\s\S]*?\*\//g, "");
+  const withoutLineComments = withoutBlockComments.replace(/^\s*\/\/.*$/gm, "");
+  return withoutLineComments.trim().length > 0;
+}
+function toScriptRequestInit(request) {
+  return {
+    method: request.method,
+    url: request.url,
+    headers: Object.entries(request.headers).map(([key, value]) => ({
+      key,
+      value: String(value),
+      enabled: true
+    })),
+    params: request.params,
+    body: request.body,
+    bodyType: request.bodyType
+  };
+}
+function isPluginServerHttpResponse(value) {
+  return Boolean(
+    value && typeof value === "object" && value.kind === "http-response"
+  );
+}
+function toResponseInit(planned) {
+  const status = typeof planned.status === "number" ? planned.status : 200;
+  const headers = planned.headers && typeof planned.headers === "object" ? { ...planned.headers } : {};
+  let body = "";
+  if (typeof planned.body === "string") {
+    body = planned.body;
+  } else if (planned.body != null) {
+    try {
+      body = JSON.stringify(planned.body);
+    } catch {
+      body = String(planned.body);
+    }
+  }
+  const sizeBytes = new TextEncoder().encode(body).length;
+  return {
+    status,
+    statusText: statusTextFor(status),
+    headers,
+    body,
+    timeMs: 0,
+    sizeBytes
+  };
+}
+function statusTextFor(status) {
+  const known = {
+    200: "OK",
+    201: "Created",
+    204: "No Content",
+    400: "Bad Request",
+    401: "Unauthorized",
+    403: "Forbidden",
+    404: "Not Found",
+    500: "Internal Server Error",
+    503: "Service Unavailable"
+  };
+  return known[status] ?? "";
+}
+function applyScriptReturn(base, value) {
+  if (value === void 0 || value === null) {
+    return base;
+  }
+  if (isPluginServerHttpResponse(value)) {
+    return {
+      ...value,
+      delayMs: value.delayMs ?? base.delayMs
+    };
+  }
+  return {
+    ...base,
+    body: value
+  };
+}
+
 // src/main.ts
 var logger = createLogger("mock-server");
 var stubs = [];
@@ -129,6 +207,24 @@ function notFoundResponse(request) {
     }
   };
 }
+function runStubScript(hc, phase, source, request, planned) {
+  const trimmed = source.trim();
+  if (!hasExecutableScript(trimmed)) {
+    return planned;
+  }
+  const context = hc.scripts.createContext({
+    phase,
+    request: toScriptRequestInit(request),
+    variables: {},
+    ...phase === "post" ? { response: toResponseInit(planned) } : {}
+  });
+  const result = context.run(trimmed);
+  if (result.error) {
+    logger.error(`${phase} script error:`, result.error);
+    return planned;
+  }
+  return applyScriptReturn(planned, result.value);
+}
 function currentStatus() {
   return {
     running,
@@ -138,7 +234,12 @@ function currentStatus() {
   };
 }
 function withPriorities(next) {
-  return next.map((stub, index) => ({ ...stub, priority: index }));
+  return next.map((stub, index) => ({
+    ...stub,
+    priority: index,
+    beforeScript: typeof stub.beforeScript === "string" ? stub.beforeScript : "",
+    afterScript: typeof stub.afterScript === "string" ? stub.afterScript : ""
+  }));
 }
 function activate(hc) {
   hc.subscriptions.push(
@@ -153,7 +254,22 @@ function activate(hc) {
         return notFoundResponse(request);
       }
       logger.info("matched stub", match.id, request.method, request.path);
-      return responseFromStub(match);
+      let planned = responseFromStub(match);
+      planned = runStubScript(
+        hc,
+        "pre",
+        match.beforeScript ?? "",
+        request,
+        planned
+      );
+      planned = runStubScript(
+        hc,
+        "post",
+        match.afterScript ?? "",
+        request,
+        planned
+      );
+      return planned;
     })
   );
   hc.subscriptions.push(

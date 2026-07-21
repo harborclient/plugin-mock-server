@@ -4,6 +4,12 @@ import type {
 } from "@harborclient/sdk/main";
 import { createLogger } from "@harborclient/sdk/runtime-utils";
 import { findMatchingStub } from "./matchStub";
+import {
+  applyScriptReturn,
+  hasExecutableScript,
+  toResponseInit,
+  toScriptRequestInit,
+} from "./scriptHelpers";
 import type {
   MockStub,
   MockServerUiStatus,
@@ -94,6 +100,44 @@ function notFoundResponse(
 }
 
 /**
+ * Runs a stub script and applies its return value to a planned response.
+ *
+ * @param hc - Main plugin context for the script sandbox.
+ * @param phase - Script phase (`pre` for Before, `post` for After).
+ * @param source - User script source.
+ * @param request - Incoming request snapshot.
+ * @param planned - Current planned response.
+ * @returns Next planned response (unchanged when the script is empty or errors).
+ */
+function runStubScript(
+  hc: MainPluginContext,
+  phase: "pre" | "post",
+  source: string,
+  request: EchoServerIncomingRequest,
+  planned: PluginServerHttpResponse
+): PluginServerHttpResponse {
+  const trimmed = source.trim();
+  if (!hasExecutableScript(trimmed)) {
+    return planned;
+  }
+
+  const context = hc.scripts.createContext({
+    phase,
+    request: toScriptRequestInit(request),
+    variables: {},
+    ...(phase === "post" ? { response: toResponseInit(planned) } : {}),
+  });
+
+  const result = context.run(trimmed);
+  if (result.error) {
+    logger.error(`${phase} script error:`, result.error);
+    return planned;
+  }
+
+  return applyScriptReturn(planned, result.value);
+}
+
+/**
  * Returns the UI status payload for renderer IPC.
  */
 function currentStatus(): MockServerUiStatus {
@@ -106,13 +150,19 @@ function currentStatus(): MockServerUiStatus {
 }
 
 /**
- * Reassigns priority from list order (index = priority).
+ * Reassigns priority from list order (index = priority) and fills missing script fields.
  *
  * @param next - Stubs in display order.
- * @returns Stubs with updated priorities.
+ * @returns Stubs with updated priorities and script defaults.
  */
 function withPriorities(next: MockStub[]): MockStub[] {
-  return next.map((stub, index) => ({ ...stub, priority: index }));
+  return next.map((stub, index) => ({
+    ...stub,
+    priority: index,
+    beforeScript:
+      typeof stub.beforeScript === "string" ? stub.beforeScript : "",
+    afterScript: typeof stub.afterScript === "string" ? stub.afterScript : "",
+  }));
 }
 
 /**
@@ -133,7 +183,23 @@ export function activate(hc: MainPluginContext): void {
         return notFoundResponse(request);
       }
       logger.info("matched stub", match.id, request.method, request.path);
-      return responseFromStub(match);
+
+      let planned = responseFromStub(match);
+      planned = runStubScript(
+        hc,
+        "pre",
+        match.beforeScript ?? "",
+        request,
+        planned
+      );
+      planned = runStubScript(
+        hc,
+        "post",
+        match.afterScript ?? "",
+        request,
+        planned
+      );
+      return planned;
     })
   );
 

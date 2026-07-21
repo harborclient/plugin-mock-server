@@ -32,6 +32,16 @@ export interface MockStub {
    */
   body: string;
   delayMs: number;
+  /**
+   * Runs after this stub matches, before the canned response is built.
+   * Return a body value or `{ kind: 'http-response', ... }` to override.
+   */
+  beforeScript: string;
+  /**
+   * Runs just before the response is returned to the host.
+   * `hc.response` is the planned response; return a value to override body/full response.
+   */
+  afterScript: string;
 }
 
 /**
@@ -81,6 +91,8 @@ export function createDefaultStub(overrides: Partial<MockStub> = {}): MockStub {
     ],
     body: '{\n  "ok": true\n}\n',
     delayMs: 0,
+    beforeScript: "",
+    afterScript: "",
     ...rest,
     id,
   };

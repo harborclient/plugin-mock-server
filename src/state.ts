@@ -42,6 +42,36 @@ function parseMockStatus(raw: unknown): MockServerUiStatus {
 }
 
 /**
+ * Normalizes one persisted stub so older entries without scripts still load.
+ *
+ * @param raw - Candidate stub object from storage.
+ * @returns A complete MockStub, or null when the row is invalid.
+ */
+function normalizeStub(raw: unknown): MockStub | null {
+  if (!raw || typeof raw !== "object") {
+    return null;
+  }
+  const item = raw as Partial<MockStub>;
+  if (typeof item.id !== "string" || item.id.length === 0) {
+    return null;
+  }
+  return {
+    id: item.id,
+    enabled: typeof item.enabled === "boolean" ? item.enabled : true,
+    priority: typeof item.priority === "number" ? item.priority : 0,
+    method: typeof item.method === "string" ? item.method : "GET",
+    path: typeof item.path === "string" ? item.path : "/",
+    status: typeof item.status === "number" ? item.status : 200,
+    headers: Array.isArray(item.headers) ? item.headers : [],
+    body: typeof item.body === "string" ? item.body : "",
+    delayMs: typeof item.delayMs === "number" ? item.delayMs : 0,
+    beforeScript:
+      typeof item.beforeScript === "string" ? item.beforeScript : "",
+    afterScript: typeof item.afterScript === "string" ? item.afterScript : "",
+  };
+}
+
+/**
  * Parses persisted stubs from storage.
  *
  * @param raw - Raw storage value.
@@ -50,13 +80,9 @@ function parseStubs(raw: unknown): MockStub[] {
   if (!Array.isArray(raw)) {
     return [];
   }
-  return raw.filter((item): item is MockStub => {
-    return Boolean(
-      item &&
-        typeof item === "object" &&
-        typeof (item as MockStub).id === "string"
-    );
-  });
+  return raw
+    .map((item) => normalizeStub(item))
+    .filter((item): item is MockStub => item != null);
 }
 
 /**

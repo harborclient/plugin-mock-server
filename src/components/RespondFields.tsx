@@ -63,11 +63,7 @@ export function RespondFields({ stub, onChange }: Props) {
             }}
           />
         </FormGroup>
-        <FormGroup
-          label="Delay (ms)"
-          htmlFor="mock-stub-delay"
-          description="Host waits before writing the response."
-        >
+        <FormGroup label="Delay (ms)" htmlFor="mock-stub-delay">
           <Input
             id="mock-stub-delay"
             type="number"
@@ -88,6 +84,9 @@ export function RespondFields({ stub, onChange }: Props) {
           />
         </FormGroup>
       </div>
+      <p className="m-0 text-[14px] text-muted">
+        Host waits before writing the response.
+      </p>
 
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between gap-2">

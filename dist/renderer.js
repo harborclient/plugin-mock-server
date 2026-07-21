@@ -1,4 +1,4 @@
-// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/runtime/reactHost.js
+// node_modules/.pnpm/@harborclient+sdk@file+..+..+..+..+..+..+..+tmp+harborclient-sdk-1.1.27.tgz_@babel+runt_c8eb3f045fa45f80e66defb123194984/node_modules/@harborclient/sdk/dist/runtime/reactHost.js
 var HOST_REACT_GLOBAL_KEY = "__HARBORCLIENT_HOST_REACT__";
 var HOST_REACT_DOM_GLOBAL_KEY = "__HARBORCLIENT_HOST_REACT_DOM__";
 var hostReact = null;
@@ -52,12 +52,12 @@ function requireHostReactDom() {
   return hostReactDom;
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/runtime/index.js
+// node_modules/.pnpm/@harborclient+sdk@file+..+..+..+..+..+..+..+tmp+harborclient-sdk-1.1.27.tgz_@babel+runt_c8eb3f045fa45f80e66defb123194984/node_modules/@harborclient/sdk/dist/runtime/index.js
 function installReact(react) {
   setHostReact(react);
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/runtime/react.js
+// node_modules/.pnpm/@harborclient+sdk@file+..+..+..+..+..+..+..+tmp+harborclient-sdk-1.1.27.tgz_@babel+runt_c8eb3f045fa45f80e66defb123194984/node_modules/@harborclient/sdk/dist/runtime/react.js
 function hook(name2) {
   const react = requireHostReact();
   const fn = react[name2];
@@ -147,226 +147,15 @@ var defaultExport = new Proxy(reactNamespace, {
   }
 });
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/runtime/store.js
-function createExternalStore(initial2) {
-  let state = initial2;
-  const listeners = /* @__PURE__ */ new Set();
-  return {
-    subscribe: (listener2) => {
-      listeners.add(listener2);
-      return () => {
-        listeners.delete(listener2);
-      };
-    },
-    getSnapshot: () => state,
-    setState: (next) => {
-      state = next;
-      for (const listener2 of listeners) {
-        listener2();
-      }
-    }
-  };
-}
-function defaultEquals(a3, b3) {
-  return JSON.stringify(a3) === JSON.stringify(b3);
-}
-function createStorageStore(options) {
-  const { storage, key, parse: parse2, equals = defaultEquals, keepCurrentWhenMissing = false } = options;
-  const external = createExternalStore(parse2(void 0));
-  async function reloadFromStorage() {
-    const raw = await storage.get(key);
-    if (raw === void 0 && keepCurrentWhenMissing) {
-      return;
-    }
-    const next = parse2(raw);
-    const current = external.getSnapshot();
-    if (!equals(current, next)) {
-      external.setState(next);
-    }
+// node_modules/.pnpm/@harborclient+sdk@file+..+..+..+..+..+..+..+tmp+harborclient-sdk-1.1.27.tgz_@babel+runt_c8eb3f045fa45f80e66defb123194984/node_modules/@harborclient/sdk/dist/clipboard.js
+async function copyToClipboard(hc, text2, options) {
+  await navigator.clipboard.writeText(text2);
+  if (options?.toast) {
+    hc.ui.showToast(options.toast, { duration: options.duration });
   }
-  async function set2(next) {
-    const current = external.getSnapshot();
-    if (equals(current, next)) {
-      return;
-    }
-    await storage.set(key, next);
-    external.setState(next);
-  }
-  function useValue() {
-    return useSyncExternalStore(external.subscribe, external.getSnapshot, external.getSnapshot);
-  }
-  void reloadFromStorage();
-  return {
-    subscribe: external.subscribe,
-    getSnapshot: external.getSnapshot,
-    useValue,
-    reloadFromStorage,
-    set: set2
-  };
-}
-function setIntervalDisposable(callback, intervalMs) {
-  const timer = setInterval(callback, intervalMs);
-  return {
-    dispose: () => {
-      clearInterval(timer);
-    }
-  };
-}
-function syncOnWindowFocus(stores, options) {
-  const list = Array.isArray(stores) ? stores : [stores];
-  const reload = () => {
-    for (const store of list) {
-      void store.reloadFromStorage();
-    }
-  };
-  window.addEventListener("focus", reload);
-  document.addEventListener("visibilitychange", reload);
-  reload();
-  const intervalDisposable = options?.intervalMs !== void 0 ? setIntervalDisposable(reload, options.intervalMs) : null;
-  return {
-    dispose: () => {
-      window.removeEventListener("focus", reload);
-      document.removeEventListener("visibilitychange", reload);
-      intervalDisposable?.dispose();
-    }
-  };
 }
 
-// src/state.ts
-var MOCK_STATUS_STORAGE_KEY = "mock-server-status";
-var MOCK_STUBS_STORAGE_KEY = "mock-server-stubs";
-var pluginContext = null;
-var statusStore = null;
-var stubsStore = null;
-var errorStore = createExternalStore(null);
-function parseMockStatus(raw) {
-  if (!raw || typeof raw !== "object") {
-    return { running: false, hitCount: 0, stubCount: 0 };
-  }
-  const candidate = raw;
-  if (typeof candidate.running !== "boolean") {
-    return { running: false, hitCount: 0, stubCount: 0 };
-  }
-  return {
-    running: candidate.running,
-    hitCount: typeof candidate.hitCount === "number" ? candidate.hitCount : 0,
-    stubCount: typeof candidate.stubCount === "number" ? candidate.stubCount : 0,
-    ...typeof candidate.port === "number" ? { port: candidate.port } : {}
-  };
-}
-function parseStubs(raw) {
-  if (!Array.isArray(raw)) {
-    return [];
-  }
-  return raw.filter((item) => {
-    return Boolean(
-      item && typeof item === "object" && typeof item.id === "string"
-    );
-  });
-}
-function requireStatusStore() {
-  if (!statusStore) {
-    throw new Error("Mock server state is not initialized.");
-  }
-  return statusStore;
-}
-function requireStubsStore() {
-  if (!stubsStore) {
-    throw new Error("Mock server state is not initialized.");
-  }
-  return stubsStore;
-}
-function requirePluginContext() {
-  if (!pluginContext) {
-    throw new Error("Mock server state is not initialized.");
-  }
-  return pluginContext;
-}
-function initMockState(hc) {
-  pluginContext = hc;
-  statusStore = createStorageStore({
-    storage: hc.storage,
-    key: MOCK_STATUS_STORAGE_KEY,
-    parse: parseMockStatus,
-    keepCurrentWhenMissing: true
-  });
-  stubsStore = createStorageStore({
-    storage: hc.storage,
-    key: MOCK_STUBS_STORAGE_KEY,
-    parse: parseStubs,
-    keepCurrentWhenMissing: true
-  });
-  void statusStore.reloadFromStorage();
-  void stubsStore.reloadFromStorage().then(async () => {
-    const local = stubsStore?.getSnapshot() ?? [];
-    try {
-      await hc.ipc.invoke("setStubs", { stubs: local });
-    } catch {
-    }
-  });
-  void refreshMockStatusFromMain();
-}
-function getMockStatusStore() {
-  return requireStatusStore();
-}
-function disposeMockState() {
-  pluginContext = null;
-  statusStore = null;
-  stubsStore = null;
-  errorStore.setState(null);
-}
-function getMockStatus() {
-  return statusStore?.getSnapshot() ?? { running: false, hitCount: 0, stubCount: 0 };
-}
-function getMockStubs() {
-  return stubsStore?.getSnapshot() ?? [];
-}
-function getMockError() {
-  return errorStore.getSnapshot();
-}
-function subscribeMockState(listener2) {
-  const unsubscribeStatus = statusStore?.subscribe(listener2) ?? (() => void 0);
-  const unsubscribeStubs = stubsStore?.subscribe(listener2) ?? (() => void 0);
-  const unsubscribeError = errorStore.subscribe(listener2);
-  return () => {
-    unsubscribeStatus();
-    unsubscribeStubs();
-    unsubscribeError();
-  };
-}
-async function refreshMockStatusFromMain() {
-  const hc = requirePluginContext();
-  requireStatusStore();
-  try {
-    const next = await hc.ipc.invoke("status");
-    await setMockStatus(next);
-  } catch {
-  }
-}
-async function setMockStatus(next) {
-  await requireStatusStore().set(next);
-}
-async function setMockStubs(next) {
-  const hc = requirePluginContext();
-  const withPriority = next.map((stub, index) => ({
-    ...stub,
-    priority: index
-  }));
-  await requireStubsStore().set(withPriority);
-  try {
-    await hc.ipc.invoke("setStubs", { stubs: withPriority });
-    const status = await hc.ipc.invoke("status");
-    await setMockStatus({ ...status, stubCount: withPriority.length });
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    setMockError(message);
-  }
-}
-function setMockError(message) {
-  errorStore.setState(message);
-}
-
-// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/runtime/jsx-runtime.js
+// node_modules/.pnpm/@harborclient+sdk@file+..+..+..+..+..+..+..+tmp+harborclient-sdk-1.1.27.tgz_@babel+runt_c8eb3f045fa45f80e66defb123194984/node_modules/@harborclient/sdk/dist/runtime/jsx-runtime.js
 var Fragment = Symbol.for("@harborclient/sdk.Fragment");
 function build(type, props, key) {
   const react = requireHostReact();
@@ -379,37 +168,6 @@ function build(type, props, key) {
 }
 var jsx = build;
 var jsxs = build;
-
-// src/components/MockServerFooterIndicator.tsx
-function MockServerFooterIndicator() {
-  const status = getMockStatusStore().useValue();
-  useEffect(() => {
-    const syncDisposable = syncOnWindowFocus(getMockStatusStore(), {
-      intervalMs: 500
-    });
-    return () => {
-      syncDisposable.dispose();
-    };
-  }, []);
-  return /* @__PURE__ */ jsxs("span", { className: "inline-flex items-center", role: "status", children: [
-    /* @__PURE__ */ jsx("span", { className: "sr-only", children: status.running ? "Mock server active" : "Mock server stopped" }),
-    /* @__PURE__ */ jsx(
-      "span",
-      {
-        className: `inline-block h-2 w-2 rounded-full ${status.running ? "bg-success" : "bg-muted"}`,
-        "aria-hidden": "true"
-      }
-    )
-  ] });
-}
-
-// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/clipboard.js
-async function copyToClipboard(hc, text2, options) {
-  await navigator.clipboard.writeText(text2);
-  if (options?.toast) {
-    hc.ui.showToast(options.toast, { duration: options.duration });
-  }
-}
 
 // node_modules/.pnpm/clsx@2.1.1/node_modules/clsx/dist/clsx.mjs
 function r(e4) {
@@ -3680,12 +3438,12 @@ var getDefaultConfig = () => {
 };
 var twMerge = /* @__PURE__ */ createTailwindMerge(getDefaultConfig);
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/utils.js
+// node_modules/.pnpm/@harborclient+sdk@file+..+..+..+..+..+..+..+tmp+harborclient-sdk-1.1.27.tgz_@babel+runt_c8eb3f045fa45f80e66defb123194984/node_modules/@harborclient/sdk/dist/components/utils.js
 function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/FieldError/index.js
+// node_modules/.pnpm/@harborclient+sdk@file+..+..+..+..+..+..+..+tmp+harborclient-sdk-1.1.27.tgz_@babel+runt_c8eb3f045fa45f80e66defb123194984/node_modules/@harborclient/sdk/dist/components/FieldError/index.js
 function spacingClasses(spacing) {
   switch (spacing) {
     case "section":
@@ -3703,7 +3461,7 @@ function FieldError({ children, spacing = "field", roleAlert = true, className, 
   return jsx("p", { ...props, className: cn("hc-field-error text-[14px] text-danger", spacingClasses(spacing), className), role: roleAlert ? "alert" : void 0, children });
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/Button/index.js
+// node_modules/.pnpm/@harborclient+sdk@file+..+..+..+..+..+..+..+tmp+harborclient-sdk-1.1.27.tgz_@babel+runt_c8eb3f045fa45f80e66defb123194984/node_modules/@harborclient/sdk/dist/components/Button/index.js
 var BUTTON_BASE = "inline-flex cursor-pointer items-center rounded-full app-no-drag";
 var VARIANT_CLASSES = {
   primary: cn(BUTTON_BASE, "min-h-[32px] justify-center border border-transparent bg-accent px-3 py-1 text-[15px] font-medium text-white shadow-sm hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"),
@@ -3718,7 +3476,7 @@ function Button({ variant = "primary", className, type = "button", innerRef, ...
   return jsx("button", { ref: innerRef, type, className: cn("hc-button", VARIANT_CLASSES[variant], className), ...props });
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/forms/classes.js
+// node_modules/.pnpm/@harborclient+sdk@file+..+..+..+..+..+..+..+tmp+harborclient-sdk-1.1.27.tgz_@babel+runt_c8eb3f045fa45f80e66defb123194984/node_modules/@harborclient/sdk/dist/components/forms/classes.js
 var field = "rounded-lg border border-separator bg-field px-2.5 py-1.5 text-text app-no-drag";
 var surfaceField = "w-full rounded-lg border border-separator bg-field px-3 py-2.5 text-[15px] text-text";
 function mergeFieldClasses(variant, className, rootClass) {
@@ -3726,23 +3484,23 @@ function mergeFieldClasses(variant, className, rootClass) {
   return result === "" ? void 0 : result;
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/forms/Input.js
+// node_modules/.pnpm/@harborclient+sdk@file+..+..+..+..+..+..+..+tmp+harborclient-sdk-1.1.27.tgz_@babel+runt_c8eb3f045fa45f80e66defb123194984/node_modules/@harborclient/sdk/dist/components/forms/Input.js
 function Input({ ref, variant = "control", type, className, ...props }) {
   const resolvedVariant = type === "checkbox" || type === "radio" ? "plain" : variant;
   return jsx("input", { ref, type, className: mergeFieldClasses(resolvedVariant, className, "hc-input"), ...props });
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/forms/Select.js
+// node_modules/.pnpm/@harborclient+sdk@file+..+..+..+..+..+..+..+tmp+harborclient-sdk-1.1.27.tgz_@babel+runt_c8eb3f045fa45f80e66defb123194984/node_modules/@harborclient/sdk/dist/components/forms/Select.js
 function Select({ ref, variant = "control", className, children, ...props }) {
   return jsx("select", { ref, className: mergeFieldClasses(variant, className, "hc-select"), ...props, children });
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/runtime/react-dom.js
+// node_modules/.pnpm/@harborclient+sdk@file+..+..+..+..+..+..+..+tmp+harborclient-sdk-1.1.27.tgz_@babel+runt_c8eb3f045fa45f80e66defb123194984/node_modules/@harborclient/sdk/dist/runtime/react-dom.js
 function createPortal(children, container, key) {
   return requireHostReactDom().createPortal(children, container, key);
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/portalToBody.js
+// node_modules/.pnpm/@harborclient+sdk@file+..+..+..+..+..+..+..+tmp+harborclient-sdk-1.1.27.tgz_@babel+runt_c8eb3f045fa45f80e66defb123194984/node_modules/@harborclient/sdk/dist/components/portalToBody.js
 function portalToBody(node) {
   if (typeof document === "undefined") {
     throw new Error("portalToBody requires a DOM document");
@@ -7609,7 +7367,7 @@ var FontAwesomeIcon = React.forwardRef((props, ref) => {
 FontAwesomeIcon.displayName = "FontAwesomeIcon";
 var DEFAULT_CLASSNAMES = `${LAYER_CLASSES.default} ${STYLE_CLASSES.fixedWidth}`;
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/FaIcon/index.js
+// node_modules/.pnpm/@harborclient+sdk@file+..+..+..+..+..+..+..+tmp+harborclient-sdk-1.1.27.tgz_@babel+runt_c8eb3f045fa45f80e66defb123194984/node_modules/@harborclient/sdk/dist/components/FaIcon/index.js
 function FaIcon({ icon: icon3, className = "h-3.5 w-3.5", title, ...props }) {
   return createElement(FontAwesomeIcon, {
     ...props,
@@ -35254,7 +35012,7 @@ var ReactCodeMirror = /* @__PURE__ */ forwardRef2((props, ref) => {
 ReactCodeMirror.displayName = "CodeMirror";
 var esm_default = ReactCodeMirror;
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/ui/codeEditorSettings.js
+// node_modules/.pnpm/@harborclient+sdk@file+..+..+..+..+..+..+..+tmp+harborclient-sdk-1.1.27.tgz_@babel+runt_c8eb3f045fa45f80e66defb123194984/node_modules/@harborclient/sdk/dist/ui/codeEditorSettings.js
 var DEFAULT_CODE_EDITOR_FONT_SIZE = "16px";
 var MIN_CODE_EDITOR_FONT_SIZE_PX = 14;
 var DEFAULT_CODE_EDITOR_SETUP = {
@@ -37172,7 +36930,7 @@ var e3 = { airline: { airline: [{ name: `Aegean Airlines`, iataCode: `A3` }, { n
 // node_modules/.pnpm/@faker-js+faker@10.5.0/node_modules/@faker-js/faker/dist/locale/en.js
 var r4 = new yt({ locale: [e3, Ct] });
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/variables/dynamic.js
+// node_modules/.pnpm/@harborclient+sdk@file+..+..+..+..+..+..+..+tmp+harborclient-sdk-1.1.27.tgz_@babel+runt_c8eb3f045fa45f80e66defb123194984/node_modules/@harborclient/sdk/dist/variables/dynamic.js
 function categoryImageUrl(category) {
   return r4.image.urlLoremFlickr({ category });
 }
@@ -37672,7 +37430,7 @@ function getDynamicVariableDescription(key) {
 }
 var DYNAMIC_VARIABLE_NAMES = Object.keys(DYNAMIC_VARIABLES).sort();
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/variables/tokens.js
+// node_modules/.pnpm/@harborclient+sdk@file+..+..+..+..+..+..+..+tmp+harborclient-sdk-1.1.27.tgz_@babel+runt_c8eb3f045fa45f80e66defb123194984/node_modules/@harborclient/sdk/dist/variables/tokens.js
 var VARIABLE_NAME_CHARS = "\\w$.-";
 var VARIABLE_TOKEN_PATTERN = new RegExp(`\\{\\{\\s*([${VARIABLE_NAME_CHARS}]+)(\\s*\\|\\s*[${VARIABLE_NAME_CHARS}]+)*\\s*\\}\\}`, "g");
 var VALID_NAME_PATTERN = new RegExp(`^[${VARIABLE_NAME_CHARS}]+$`);
@@ -37694,7 +37452,7 @@ function resolveVariable(key, variables) {
   return variableLookup(variables).get(key);
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/VariableTooltip/dom.js
+// node_modules/.pnpm/@harborclient+sdk@file+..+..+..+..+..+..+..+tmp+harborclient-sdk-1.1.27.tgz_@babel+runt_c8eb3f045fa45f80e66defb123194984/node_modules/@harborclient/sdk/dist/components/VariableTooltip/dom.js
 var COPY_ICON_PATH = "M208 0H332.1c12.7 0 24.9 5.1 33.9 14.1l67.9 67.9c9 9 14.1 21.2 14.1 33.9V336c0 26.5-21.5 48-48 48H208c-26.5 0-48-21.5-48-48V48c0-26.5 21.5-48 48-48zM48 128h80v64H64v256h192v-32h64v48c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V176c0-26.5 21.5-48 48-48z";
 var CHECK_ICON_PATH = "M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z";
 function createTooltipIcon(path) {
@@ -37765,7 +37523,7 @@ function buildVariableTooltipDom(key, variables, onEditVariable) {
   return dom2;
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/VariableTooltip/VariableTooltipValue.js
+// node_modules/.pnpm/@harborclient+sdk@file+..+..+..+..+..+..+..+tmp+harborclient-sdk-1.1.27.tgz_@babel+runt_c8eb3f045fa45f80e66defb123194984/node_modules/@harborclient/sdk/dist/components/VariableTooltip/VariableTooltipValue.js
 function VariableTooltipValue({ value, variableKey, muted, onClose }) {
   const [copied, setCopied] = useState(false);
   const handleCopy = () => {
@@ -37781,7 +37539,65 @@ function VariableTooltipValue({ value, variableKey, muted, onClose }) {
   }, onClick: onClose, children: jsx(FaIcon, { icon: faXmark, className: "h-4 w-4" }) })] });
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/CodeEditor/config.js
+// node_modules/.pnpm/@harborclient+sdk@file+..+..+..+..+..+..+..+tmp+harborclient-sdk-1.1.27.tgz_@babel+runt_c8eb3f045fa45f80e66defb123194984/node_modules/@harborclient/sdk/dist/runtime/store.js
+function createExternalStore(initial2) {
+  let state = initial2;
+  const listeners = /* @__PURE__ */ new Set();
+  return {
+    subscribe: (listener2) => {
+      listeners.add(listener2);
+      return () => {
+        listeners.delete(listener2);
+      };
+    },
+    getSnapshot: () => state,
+    setState: (next) => {
+      state = next;
+      for (const listener2 of listeners) {
+        listener2();
+      }
+    }
+  };
+}
+function defaultEquals(a3, b3) {
+  return JSON.stringify(a3) === JSON.stringify(b3);
+}
+function createStorageStore(options) {
+  const { storage, key, parse: parse2, equals = defaultEquals, keepCurrentWhenMissing = false } = options;
+  const external = createExternalStore(parse2(void 0));
+  async function reloadFromStorage() {
+    const raw = await storage.get(key);
+    if (raw === void 0 && keepCurrentWhenMissing) {
+      return;
+    }
+    const next = parse2(raw);
+    const current = external.getSnapshot();
+    if (!equals(current, next)) {
+      external.setState(next);
+    }
+  }
+  async function set2(next) {
+    const current = external.getSnapshot();
+    if (equals(current, next)) {
+      return;
+    }
+    await storage.set(key, next);
+    external.setState(next);
+  }
+  function useValue() {
+    return useSyncExternalStore(external.subscribe, external.getSnapshot, external.getSnapshot);
+  }
+  void reloadFromStorage();
+  return {
+    subscribe: external.subscribe,
+    getSnapshot: external.getSnapshot,
+    useValue,
+    reloadFromStorage,
+    set: set2
+  };
+}
+
+// node_modules/.pnpm/@harborclient+sdk@file+..+..+..+..+..+..+..+tmp+harborclient-sdk-1.1.27.tgz_@babel+runt_c8eb3f045fa45f80e66defb123194984/node_modules/@harborclient/sdk/dist/components/CodeEditor/config.js
 var DEFAULT_CODE_EDITOR_CONFIG = {
   theme: "default",
   setup: DEFAULT_CODE_EDITOR_SETUP,
@@ -37816,7 +37632,7 @@ function useCodeEditorConfig() {
   return contextValue ?? storeValue;
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/CodeEditor/editorChrome.js
+// node_modules/.pnpm/@harborclient+sdk@file+..+..+..+..+..+..+..+tmp+harborclient-sdk-1.1.27.tgz_@babel+runt_c8eb3f045fa45f80e66defb123194984/node_modules/@harborclient/sdk/dist/components/CodeEditor/editorChrome.js
 var lightHighlight = HighlightStyle.define([
   { tag: tags.propertyName, color: "#881391" },
   { tag: tags.string, color: "#c41a16" },
@@ -37981,7 +37797,7 @@ function createBuiltInSyntaxHighlighting(isDark) {
   return syntaxHighlighting(isDark ? darkHighlight : lightHighlight);
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/CodeEditor/slashCommandHighlighter.js
+// node_modules/.pnpm/@harborclient+sdk@file+..+..+..+..+..+..+..+tmp+harborclient-sdk-1.1.27.tgz_@babel+runt_c8eb3f045fa45f80e66defb123194984/node_modules/@harborclient/sdk/dist/components/CodeEditor/slashCommandHighlighter.js
 function slashCommandHighlightPattern(commands) {
   const names = commands.map((entry) => entry.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
   if (names.length === 0) {
@@ -42025,7 +41841,7 @@ var xcodeDarkInit = (options) => {
 };
 var xcodeDark = xcodeDarkInit();
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/CodeEditor/themes.js
+// node_modules/.pnpm/@harborclient+sdk@file+..+..+..+..+..+..+..+tmp+harborclient-sdk-1.1.27.tgz_@babel+runt_c8eb3f045fa45f80e66defb123194984/node_modules/@harborclient/sdk/dist/components/CodeEditor/themes.js
 var themeExtensions = {
   dracula,
   githubLight,
@@ -42042,7 +41858,7 @@ function getCodeEditorThemeExtension(value) {
   return themeExtensions[value];
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/CodeEditor/renderHighlightedPlaceholder.js
+// node_modules/.pnpm/@harborclient+sdk@file+..+..+..+..+..+..+..+tmp+harborclient-sdk-1.1.27.tgz_@babel+runt_c8eb3f045fa45f80e66defb123194984/node_modules/@harborclient/sdk/dist/components/CodeEditor/renderHighlightedPlaceholder.js
 var renderCache = /* @__PURE__ */ new Map();
 function buildRenderCacheKey(text2, options) {
   const slashNames = options.slashCommands?.map((command2) => command2.name).join(",") ?? "";
@@ -42124,7 +41940,7 @@ function renderHighlightedPlaceholderDom(text2, options) {
   return wrap;
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/CodeEditor/syntaxHighlightedPlaceholder.js
+// node_modules/.pnpm/@harborclient+sdk@file+..+..+..+..+..+..+..+tmp+harborclient-sdk-1.1.27.tgz_@babel+runt_c8eb3f045fa45f80e66defb123194984/node_modules/@harborclient/sdk/dist/components/CodeEditor/syntaxHighlightedPlaceholder.js
 var SyntaxHighlightedPlaceholderWidget = class extends WidgetType {
   text;
   options;
@@ -42291,7 +42107,7 @@ function createSyntaxHighlightedPlaceholder(text2, options) {
   ];
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/CodeEditor/syntaxLinters.js
+// node_modules/.pnpm/@harborclient+sdk@file+..+..+..+..+..+..+..+tmp+harborclient-sdk-1.1.27.tgz_@babel+runt_c8eb3f045fa45f80e66defb123194984/node_modules/@harborclient/sdk/dist/components/CodeEditor/syntaxLinters.js
 var LINT_IDLE_TIMEOUT_MS = 500;
 function scheduleIdle(callback, timeout) {
   if (typeof requestIdleCallback === "function") {
@@ -42331,7 +42147,7 @@ function createJsonSyntaxLinter() {
   return linter(jsonParseLinter());
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/CodeEditor/index.js
+// node_modules/.pnpm/@harborclient+sdk@file+..+..+..+..+..+..+..+tmp+harborclient-sdk-1.1.27.tgz_@babel+runt_c8eb3f045fa45f80e66defb123194984/node_modules/@harborclient/sdk/dist/components/CodeEditor/index.js
 function clampSelection(docLength, selection2) {
   const maxOffset2 = Math.max(0, docLength);
   return {
@@ -43196,7 +43012,7 @@ function CodeEditor({ value, onChange: onChange2, language: language2 = "text", 
   }, children: "Edit value" }) : null] }) : null, selectionActionToolbarNode ? portalToBody(selectionActionToolbarNode) : null] });
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/enhanceControl.js
+// node_modules/.pnpm/@harborclient+sdk@file+..+..+..+..+..+..+..+tmp+harborclient-sdk-1.1.27.tgz_@babel+runt_c8eb3f045fa45f80e66defb123194984/node_modules/@harborclient/sdk/dist/components/enhanceControl.js
 var REACT_FRAGMENT_TYPE = Symbol.for("react.fragment");
 var FORM_CONTROL_TAGS = /* @__PURE__ */ new Set(["button", "input", "select", "textarea"]);
 function getSingleChild(node) {
@@ -43258,7 +43074,7 @@ function enhanceControl(child, options) {
   return applyAriaProps(child, options);
 }
 
-// node_modules/.pnpm/@harborclient+sdk@1.1.25_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_22dabc005d7ce1865ee6f75a724c65a0/node_modules/@harborclient/sdk/dist/components/FormGroup/index.js
+// node_modules/.pnpm/@harborclient+sdk@file+..+..+..+..+..+..+..+tmp+harborclient-sdk-1.1.27.tgz_@babel+runt_c8eb3f045fa45f80e66defb123194984/node_modules/@harborclient/sdk/dist/components/FormGroup/index.js
 function borderedWrapperClasses(bordered, layoutClasses, extra) {
   const frame = bordered ? "p-4 border border-separator rounded-md" : "";
   const base2 = `hc-form-group ${layoutClasses} ${frame}`.trim();
@@ -43324,6 +43140,344 @@ function FormGroup({ label, children, htmlFor, description, error, errorId, desc
   return jsxs("div", { ...props, className: wrapperClasses, children: [jsxs("label", { htmlFor, className: "hc-form-group-label flex flex-col gap-1", children: [jsx("span", { className: labelClasses(labelTone, srOnly, false), children: label }), resolvedDescriptionId ? jsx("p", { id: resolvedDescriptionId, className: "hc-form-group-description m-0 text-[14px] text-muted", children: description }) : null, control] }), resolvedErrorId ? jsx(FieldError, { id: resolvedErrorId, spacing: "field", children: error }) : null] });
 }
 
+// src/constants.ts
+var MOCK_SERVER_PANEL_ID = "mock-server.panel";
+var MOCK_SERVER_VIEW_ID = "mock-server.view";
+var MOCK_BASE_URL_VARIABLE_NAME = "mockBaseUrl";
+var MOCK_BASE_URL_VARIABLE = `{{${MOCK_BASE_URL_VARIABLE_NAME}}}`;
+
+// src/state.ts
+var MOCK_STATUS_STORAGE_KEY = "mock-server-status";
+var MOCK_STUBS_STORAGE_KEY = "mock-server-stubs";
+var pluginContext = null;
+var statusStore = null;
+var stubsStore = null;
+var errorStore = createExternalStore(null);
+function parseMockStatus(raw) {
+  if (!raw || typeof raw !== "object") {
+    return { running: false, hitCount: 0, stubCount: 0 };
+  }
+  const candidate = raw;
+  if (typeof candidate.running !== "boolean") {
+    return { running: false, hitCount: 0, stubCount: 0 };
+  }
+  return {
+    running: candidate.running,
+    hitCount: typeof candidate.hitCount === "number" ? candidate.hitCount : 0,
+    stubCount: typeof candidate.stubCount === "number" ? candidate.stubCount : 0,
+    ...typeof candidate.port === "number" ? { port: candidate.port } : {}
+  };
+}
+function normalizeStub(raw) {
+  if (!raw || typeof raw !== "object") {
+    return null;
+  }
+  const item = raw;
+  if (typeof item.id !== "string" || item.id.length === 0) {
+    return null;
+  }
+  return {
+    id: item.id,
+    enabled: typeof item.enabled === "boolean" ? item.enabled : true,
+    priority: typeof item.priority === "number" ? item.priority : 0,
+    method: typeof item.method === "string" ? item.method : "GET",
+    path: typeof item.path === "string" ? item.path : "/",
+    status: typeof item.status === "number" ? item.status : 200,
+    headers: Array.isArray(item.headers) ? item.headers : [],
+    body: typeof item.body === "string" ? item.body : "",
+    delayMs: typeof item.delayMs === "number" ? item.delayMs : 0,
+    beforeScript: typeof item.beforeScript === "string" ? item.beforeScript : "",
+    afterScript: typeof item.afterScript === "string" ? item.afterScript : ""
+  };
+}
+function parseStubs(raw) {
+  if (!Array.isArray(raw)) {
+    return [];
+  }
+  return raw.map((item) => normalizeStub(item)).filter((item) => item != null);
+}
+function requireStatusStore() {
+  if (!statusStore) {
+    throw new Error("Mock server state is not initialized.");
+  }
+  return statusStore;
+}
+function requireStubsStore() {
+  if (!stubsStore) {
+    throw new Error("Mock server state is not initialized.");
+  }
+  return stubsStore;
+}
+function requirePluginContext() {
+  if (!pluginContext) {
+    throw new Error("Mock server state is not initialized.");
+  }
+  return pluginContext;
+}
+function initMockState(hc) {
+  pluginContext = hc;
+  statusStore = createStorageStore({
+    storage: hc.storage,
+    key: MOCK_STATUS_STORAGE_KEY,
+    parse: parseMockStatus,
+    keepCurrentWhenMissing: true
+  });
+  stubsStore = createStorageStore({
+    storage: hc.storage,
+    key: MOCK_STUBS_STORAGE_KEY,
+    parse: parseStubs,
+    keepCurrentWhenMissing: true
+  });
+  void statusStore.reloadFromStorage();
+  void stubsStore.reloadFromStorage().then(async () => {
+    const local = stubsStore?.getSnapshot() ?? [];
+    try {
+      await hc.ipc.invoke("setStubs", { stubs: local });
+    } catch {
+    }
+  });
+  void refreshMockStatusFromMain();
+}
+function getMockStatusStore() {
+  return requireStatusStore();
+}
+function disposeMockState() {
+  pluginContext = null;
+  statusStore = null;
+  stubsStore = null;
+  errorStore.setState(null);
+}
+function getMockStatus() {
+  return statusStore?.getSnapshot() ?? { running: false, hitCount: 0, stubCount: 0 };
+}
+function getMockStubs() {
+  return stubsStore?.getSnapshot() ?? [];
+}
+function getMockError() {
+  return errorStore.getSnapshot();
+}
+function subscribeMockState(listener2) {
+  const unsubscribeStatus = statusStore?.subscribe(listener2) ?? (() => void 0);
+  const unsubscribeStubs = stubsStore?.subscribe(listener2) ?? (() => void 0);
+  const unsubscribeError = errorStore.subscribe(listener2);
+  return () => {
+    unsubscribeStatus();
+    unsubscribeStubs();
+    unsubscribeError();
+  };
+}
+async function refreshMockStatusFromMain() {
+  const hc = requirePluginContext();
+  requireStatusStore();
+  try {
+    const next = await hc.ipc.invoke("status");
+    await setMockStatus(next);
+  } catch {
+  }
+}
+async function setMockStatus(next) {
+  await requireStatusStore().set(next);
+}
+async function setMockStubs(next) {
+  const hc = requirePluginContext();
+  const withPriority = next.map((stub, index) => ({
+    ...stub,
+    priority: index
+  }));
+  await requireStubsStore().set(withPriority);
+  try {
+    await hc.ipc.invoke("setStubs", { stubs: withPriority });
+    const status = await hc.ipc.invoke("status");
+    await setMockStatus({ ...status, stubCount: withPriority.length });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    setMockError(message);
+  }
+}
+function setMockError(message) {
+  errorStore.setState(message);
+}
+
+// src/components/MockServerPanel.tsx
+function MockServerPanel({ hc }) {
+  const [portInput, setPortInput] = useState("0");
+  const [status, setStatus] = useState(getMockStatus());
+  const [stubCount, setStubCount] = useState(getMockStubs().length);
+  const [error, setError] = useState(getMockError());
+  const [busy, setBusy] = useState(false);
+  const refreshStatus = useCallback(async () => {
+    try {
+      const next = await hc.ipc.invoke("status");
+      await setMockStatus(next);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      setMockError(message);
+    }
+  }, [hc]);
+  useEffect(() => {
+    void refreshStatus();
+    return subscribeMockState(() => {
+      setStatus(getMockStatus());
+      setStubCount(getMockStubs().length);
+      setError(getMockError());
+    });
+  }, [refreshStatus]);
+  const baseUrl = status.running && status.port !== void 0 ? `http://localhost:${status.port}` : null;
+  const handleStart = useCallback(async () => {
+    setBusy(true);
+    setMockError(null);
+    try {
+      await setMockStubs(getMockStubs());
+      const port = Number(portInput);
+      const result = await hc.ipc.invoke("start", {
+        port: Number.isFinite(port) ? port : 0
+      });
+      await setMockStatus(result);
+      const url = `http://localhost:${result.port}`;
+      await hc.commands.execute(
+        "harborclient:setGlobalVariable",
+        MOCK_BASE_URL_VARIABLE_NAME,
+        url
+      );
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      setMockError(message);
+    } finally {
+      setBusy(false);
+    }
+  }, [hc, portInput]);
+  const handleStop = useCallback(async () => {
+    setBusy(true);
+    setMockError(null);
+    try {
+      const result = await hc.ipc.invoke("stop");
+      await setMockStatus(result);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      setMockError(message);
+    } finally {
+      setBusy(false);
+    }
+  }, [hc]);
+  const handleOpenFullPage = useCallback(async () => {
+    setMockError(null);
+    try {
+      await hc.commands.execute(
+        "harborclient:openMainView",
+        hc.pluginId,
+        MOCK_SERVER_VIEW_ID
+      );
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      setMockError(message);
+    }
+  }, [hc]);
+  const handleCopyMockBaseUrlVariable = useCallback(async () => {
+    try {
+      await copyToClipboard(hc, MOCK_BASE_URL_VARIABLE, {
+        toast: `Copied ${MOCK_BASE_URL_VARIABLE}`
+      });
+    } catch {
+    }
+  }, [hc]);
+  return /* @__PURE__ */ jsxs("div", { className: "flex h-full min-h-0 flex-col bg-control", children: [
+    /* @__PURE__ */ jsxs("div", { className: "flex shrink-0 flex-wrap items-center gap-3 border-b border-separator px-3 py-2 pr-8", children: [
+      /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
+        /* @__PURE__ */ jsx("h3", { className: "text-[14px] font-medium text-text", children: "Mock server" }),
+        /* @__PURE__ */ jsx(
+          "span",
+          {
+            className: `inline-block h-2.5 w-2.5 rounded-full ${status.running ? "bg-success" : "bg-muted"}`,
+            "aria-hidden": "true"
+          }
+        ),
+        /* @__PURE__ */ jsx("span", { className: "text-[14px] text-muted", role: "status", children: status.running ? `Listening on port ${status.port}` : "Stopped" })
+      ] }),
+      /* @__PURE__ */ jsxs("span", { className: "text-[14px] text-muted", role: "status", children: [
+        stubCount,
+        " stub",
+        stubCount === 1 ? "" : "s",
+        " \xB7 ",
+        status.hitCount,
+        " hit",
+        status.hitCount === 1 ? "" : "s"
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "ml-auto flex items-center gap-2", children: [
+        /* @__PURE__ */ jsx(
+          Button,
+          {
+            type: "button",
+            variant: "secondary",
+            onClick: () => void handleOpenFullPage(),
+            children: "Open Mock Server"
+          }
+        ),
+        status.running ? /* @__PURE__ */ jsx(
+          Button,
+          {
+            type: "button",
+            variant: "secondary",
+            disabled: busy,
+            onClick: () => void handleStop(),
+            children: "Stop"
+          }
+        ) : /* @__PURE__ */ jsx(
+          Button,
+          {
+            type: "button",
+            variant: "primary",
+            disabled: busy,
+            onClick: () => void handleStart(),
+            children: "Start"
+          }
+        )
+      ] })
+    ] }),
+    /* @__PURE__ */ jsx("div", { className: "min-h-0 flex-1 overflow-auto px-3 py-3", children: /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-4", children: [
+      error && /* @__PURE__ */ jsx(FieldError, { roleAlert: true, spacing: "section", children: error }),
+      baseUrl && /* @__PURE__ */ jsxs("p", { className: "text-[14px] text-text", role: "status", children: [
+        /* @__PURE__ */ jsxs("span", { children: [
+          "Base URL: ",
+          /* @__PURE__ */ jsx("span", { className: "font-mono", children: baseUrl })
+        ] }),
+        " ",
+        /* @__PURE__ */ jsx(
+          "button",
+          {
+            type: "button",
+            className: "cursor-pointer border-0 bg-transparent p-0 font-mono underline-offset-2 hover:underline",
+            style: { color: "#32D2E2" },
+            title: "Click to copy",
+            onClick: () => void handleCopyMockBaseUrlVariable(),
+            children: MOCK_BASE_URL_VARIABLE
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsx(
+        FormGroup,
+        {
+          label: "Port",
+          htmlFor: "mock-port",
+          description: "Use 0 for the first available non-privileged port. Manage stubs on the full Mock Server page.",
+          children: /* @__PURE__ */ jsx(
+            Input,
+            {
+              id: "mock-port",
+              type: "number",
+              min: 0,
+              max: 65535,
+              className: "max-w-[12rem]",
+              value: portInput,
+              disabled: status.running || busy,
+              onChange: (event) => setPortInput(event.target.value)
+            }
+          )
+        }
+      )
+    ] }) })
+  ] });
+}
+
 // src/types.ts
 function createDefaultStub(overrides2 = {}) {
   const id2 = overrides2.id ?? (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function" ? crypto.randomUUID() : `stub-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`);
@@ -43339,6 +43493,8 @@ function createDefaultStub(overrides2 = {}) {
     ],
     body: '{\n  "ok": true\n}\n',
     delayMs: 0,
+    beforeScript: "",
+    afterScript: "",
     ...rest,
     id: id2
   };
@@ -43451,33 +43607,26 @@ function RespondFields({ stub, onChange: onChange2 }) {
           }
         }
       ) }),
-      /* @__PURE__ */ jsx(
-        FormGroup,
+      /* @__PURE__ */ jsx(FormGroup, { label: "Delay (ms)", htmlFor: "mock-stub-delay", children: /* @__PURE__ */ jsx(
+        Input,
         {
-          label: "Delay (ms)",
-          htmlFor: "mock-stub-delay",
-          description: "Host waits before writing the response.",
-          children: /* @__PURE__ */ jsx(
-            Input,
-            {
-              id: "mock-stub-delay",
-              type: "number",
-              min: 0,
-              max: 6e4,
-              className: "max-w-[8rem]",
-              value: String(stub.delayMs),
-              "aria-label": "Response delay in milliseconds",
-              onChange: (event) => {
-                const delayMs = Number(event.target.value);
-                onChange2({
-                  delayMs: Number.isFinite(delayMs) && delayMs > 0 ? Math.trunc(delayMs) : 0
-                });
-              }
-            }
-          )
+          id: "mock-stub-delay",
+          type: "number",
+          min: 0,
+          max: 6e4,
+          className: "max-w-[8rem]",
+          value: String(stub.delayMs),
+          "aria-label": "Response delay in milliseconds",
+          onChange: (event) => {
+            const delayMs = Number(event.target.value);
+            onChange2({
+              delayMs: Number.isFinite(delayMs) && delayMs > 0 ? Math.trunc(delayMs) : 0
+            });
+          }
         }
-      )
+      ) })
     ] }),
+    /* @__PURE__ */ jsx("p", { className: "m-0 text-[14px] text-muted", children: "Host waits before writing the response." }),
     /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-2", children: [
       /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between gap-2", children: [
         /* @__PURE__ */ jsx("span", { className: "text-[14px] font-medium text-text", children: "Headers" }),
@@ -43581,9 +43730,56 @@ function RespondFields({ stub, onChange: onChange2 }) {
   ] });
 }
 
+// src/components/ScriptFields.tsx
+function ScriptFields({ stub, onChange: onChange2 }) {
+  return /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-4", children: [
+    /* @__PURE__ */ jsx(
+      FormGroup,
+      {
+        label: "Before",
+        htmlFor: "mock-stub-before-script",
+        description: "Runs after this stub matches, before the canned response is used. Return a body value or { kind: 'http-response', ... } to override.",
+        children: /* @__PURE__ */ jsx(
+          CodeEditor,
+          {
+            id: "mock-stub-before-script",
+            language: "javascript",
+            value: stub.beforeScript ?? "",
+            onChange: (beforeScript) => onChange2({ beforeScript }),
+            minHeight: "10rem",
+            "aria-label": "Before script"
+          }
+        )
+      }
+    ),
+    /* @__PURE__ */ jsx(
+      FormGroup,
+      {
+        label: "After",
+        htmlFor: "mock-stub-after-script",
+        description: "Runs just before the response is sent. hc.response is the planned response (read-only). Return a body value or { kind: 'http-response', ... } to override.",
+        children: /* @__PURE__ */ jsx(
+          CodeEditor,
+          {
+            id: "mock-stub-after-script",
+            language: "javascript",
+            value: stub.afterScript ?? "",
+            onChange: (afterScript) => onChange2({ afterScript }),
+            minHeight: "10rem",
+            "aria-label": "After script"
+          }
+        )
+      }
+    )
+  ] });
+}
+
 // src/components/StubEditor.tsx
 function StubEditor({ stub, onChange: onChange2 }) {
   const [tab, setTab] = useState("match");
+  function tabClass(id2) {
+    return `cursor-pointer rounded border px-3 py-1 text-[14px] ${tab === id2 ? "border-accent bg-panel text-text" : "border-separator bg-control text-muted"}`;
+  }
   return /* @__PURE__ */ jsxs("div", { className: "flex h-full min-h-0 flex-col gap-3", children: [
     /* @__PURE__ */ jsxs(
       "div",
@@ -43600,7 +43796,7 @@ function StubEditor({ stub, onChange: onChange2 }) {
               id: "mock-tab-match",
               "aria-selected": tab === "match",
               "aria-controls": "mock-panel-match",
-              className: `cursor-pointer rounded border px-3 py-1 text-[14px] ${tab === "match" ? "border-accent bg-panel text-text" : "border-separator bg-control text-muted"}`,
+              className: tabClass("match"),
               onClick: () => setTab("match"),
               children: "Match"
             }
@@ -43613,31 +43809,56 @@ function StubEditor({ stub, onChange: onChange2 }) {
               id: "mock-tab-respond",
               "aria-selected": tab === "respond",
               "aria-controls": "mock-panel-respond",
-              className: `cursor-pointer rounded border px-3 py-1 text-[14px] ${tab === "respond" ? "border-accent bg-panel text-text" : "border-separator bg-control text-muted"}`,
+              className: tabClass("respond"),
               onClick: () => setTab("respond"),
               children: "Respond"
+            }
+          ),
+          /* @__PURE__ */ jsx(
+            "button",
+            {
+              type: "button",
+              role: "tab",
+              id: "mock-tab-scripts",
+              "aria-selected": tab === "scripts",
+              "aria-controls": "mock-panel-scripts",
+              className: tabClass("scripts"),
+              onClick: () => setTab("scripts"),
+              children: "Scripts"
             }
           )
         ]
       }
     ),
-    /* @__PURE__ */ jsx("div", { className: "min-h-0 flex-1 overflow-auto", children: tab === "match" ? /* @__PURE__ */ jsx(
-      "div",
-      {
-        role: "tabpanel",
-        id: "mock-panel-match",
-        "aria-labelledby": "mock-tab-match",
-        children: /* @__PURE__ */ jsx(MatchFields, { stub, onChange: onChange2 })
-      }
-    ) : /* @__PURE__ */ jsx(
-      "div",
-      {
-        role: "tabpanel",
-        id: "mock-panel-respond",
-        "aria-labelledby": "mock-tab-respond",
-        children: /* @__PURE__ */ jsx(RespondFields, { stub, onChange: onChange2 })
-      }
-    ) })
+    /* @__PURE__ */ jsxs("div", { className: "min-h-0 flex-1 overflow-auto", children: [
+      tab === "match" ? /* @__PURE__ */ jsx(
+        "div",
+        {
+          role: "tabpanel",
+          id: "mock-panel-match",
+          "aria-labelledby": "mock-tab-match",
+          children: /* @__PURE__ */ jsx(MatchFields, { stub, onChange: onChange2 })
+        }
+      ) : null,
+      tab === "respond" ? /* @__PURE__ */ jsx(
+        "div",
+        {
+          role: "tabpanel",
+          id: "mock-panel-respond",
+          "aria-labelledby": "mock-tab-respond",
+          children: /* @__PURE__ */ jsx(RespondFields, { stub, onChange: onChange2 })
+        }
+      ) : null,
+      tab === "scripts" ? /* @__PURE__ */ jsx(
+        "div",
+        {
+          role: "tabpanel",
+          id: "mock-panel-scripts",
+          "aria-labelledby": "mock-tab-scripts",
+          children: /* @__PURE__ */ jsx(ScriptFields, { stub, onChange: onChange2 })
+        }
+      ) : null
+    ] })
   ] });
 }
 
@@ -43670,40 +43891,41 @@ function StubListItem({
   return /* @__PURE__ */ jsxs(
     "div",
     {
-      className: `group flex items-start gap-2 rounded border px-2 py-2 ${selected ? "border-accent bg-panel" : "border-separator bg-control"}`,
+      className: `group relative flex items-center gap-2 rounded border px-2 py-2 ${selected ? "border-accent bg-panel" : "border-separator bg-control"}`,
       children: [
+        /* @__PURE__ */ jsx(
+          "button",
+          {
+            type: "button",
+            className: "absolute inset-0 cursor-pointer rounded border-0 bg-transparent p-0",
+            "aria-label": `Select stub ${stub.method} ${stub.path}`,
+            "aria-current": selected ? "true" : void 0,
+            onClick: onSelect
+          }
+        ),
         /* @__PURE__ */ jsx(
           "input",
           {
             type: "checkbox",
-            className: "mt-1",
+            className: "relative z-10 shrink-0",
             checked: stub.enabled,
             "aria-label": `Enable stub ${stub.method} ${stub.path}`,
             onChange: (event) => onToggleEnabled(event.target.checked)
           }
         ),
-        /* @__PURE__ */ jsxs(
-          "button",
-          {
-            type: "button",
-            className: "min-w-0 flex-1 cursor-pointer border-0 bg-transparent p-0 text-left",
-            "aria-current": selected ? "true" : void 0,
-            onClick: onSelect,
-            children: [
-              /* @__PURE__ */ jsxs("div", { className: "flex flex-wrap items-center gap-2", children: [
-                /* @__PURE__ */ jsx("span", { className: "font-mono text-[14px] font-medium text-text", children: stub.method }),
-                /* @__PURE__ */ jsx("span", { className: "truncate font-mono text-[14px] text-text", children: stub.path })
-              ] }),
-              /* @__PURE__ */ jsxs("div", { className: "mt-0.5 text-[14px] text-muted", children: [
-                stub.status,
-                " \xB7 ",
-                contentTypeSummary(stub),
-                stub.delayMs > 0 ? ` \xB7 ${stub.delayMs}ms` : ""
-              ] })
-            ]
-          }
-        ),
-        /* @__PURE__ */ jsxs("div", { className: "flex shrink-0 flex-col gap-1 opacity-0 focus-within:opacity-100 group-focus-within:opacity-100 group-hover:opacity-100", children: [
+        /* @__PURE__ */ jsxs("div", { className: "relative z-10 min-w-0 flex-1 pointer-events-none", children: [
+          /* @__PURE__ */ jsxs("div", { className: "flex flex-wrap items-center gap-2", children: [
+            /* @__PURE__ */ jsx("span", { className: "font-mono text-[14px] font-medium text-text", children: stub.method }),
+            /* @__PURE__ */ jsx("span", { className: "truncate font-mono text-[14px] text-text", children: stub.path })
+          ] }),
+          /* @__PURE__ */ jsxs("div", { className: "mt-0.5 text-[14px] text-muted", children: [
+            stub.status,
+            " \xB7 ",
+            contentTypeSummary(stub),
+            stub.delayMs > 0 ? ` \xB7 ${stub.delayMs}ms` : ""
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: "relative z-10 flex shrink-0 items-center gap-2 opacity-0 focus-within:opacity-100 group-focus-within:opacity-100 group-hover:opacity-100", children: [
           /* @__PURE__ */ jsx(
             "button",
             {
@@ -43819,34 +44041,21 @@ function StubList({
   ] });
 }
 
-// src/components/MockServerPanel.tsx
-var MOCK_BASE_URL_VARIABLE = "{{mockBaseUrl}}";
-function MockServerPanel({ hc }) {
-  const [portInput, setPortInput] = useState("0");
+// src/components/MockServerView.tsx
+function MockServerView({ hc }) {
   const [status, setStatus] = useState(getMockStatus());
   const [stubs, setStubs] = useState(getMockStubs());
   const [selectedId, setSelectedId] = useState(
     getMockStubs()[0]?.id ?? null
   );
   const [error, setError] = useState(getMockError());
-  const [busy, setBusy] = useState(false);
-  const refreshStatus = useCallback(async () => {
-    try {
-      const next = await hc.ipc.invoke("status");
-      await setMockStatus(next);
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      setMockError(message);
-    }
-  }, [hc]);
   useEffect(() => {
-    void refreshStatus();
     return subscribeMockState(() => {
       setStatus(getMockStatus());
       setStubs(getMockStubs());
       setError(getMockError());
     });
-  }, [refreshStatus]);
+  }, []);
   useEffect(() => {
     if (stubs.length === 0) {
       setSelectedId(null);
@@ -43868,42 +44077,6 @@ function MockServerPanel({ hc }) {
     },
     []
   );
-  const handleStart = useCallback(async () => {
-    setBusy(true);
-    setMockError(null);
-    try {
-      await setMockStubs(getMockStubs());
-      const port = Number(portInput);
-      const result = await hc.ipc.invoke("start", {
-        port: Number.isFinite(port) ? port : 0
-      });
-      await setMockStatus(result);
-      const url = `http://localhost:${result.port}`;
-      await hc.commands.execute(
-        "harborclient:setGlobalVariable",
-        "mockBaseUrl",
-        url
-      );
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      setMockError(message);
-    } finally {
-      setBusy(false);
-    }
-  }, [hc, portInput]);
-  const handleStop = useCallback(async () => {
-    setBusy(true);
-    setMockError(null);
-    try {
-      const result = await hc.ipc.invoke("stop");
-      await setMockStatus(result);
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      setMockError(message);
-    } finally {
-      setBusy(false);
-    }
-  }, [hc]);
   const handleAddStub = useCallback(() => {
     const stub = createDefaultStub({ path: `/example-${stubs.length + 1}` });
     void handleStubsChange([...stubs, stub]);
@@ -43938,10 +44111,9 @@ function MockServerPanel({ hc }) {
     },
     [handleStubsChange, selectedStub, stubs]
   );
-  return /* @__PURE__ */ jsx(CodeEditorConfigProvider, { value: DEFAULT_CODE_EDITOR_CONFIG, children: /* @__PURE__ */ jsxs("div", { className: "flex h-full min-h-0 flex-col bg-control", children: [
-    /* @__PURE__ */ jsxs("div", { className: "flex shrink-0 flex-wrap items-center gap-3 border-b border-separator px-3 py-2 pr-8", children: [
+  return /* @__PURE__ */ jsx(CodeEditorConfigProvider, { value: DEFAULT_CODE_EDITOR_CONFIG, children: /* @__PURE__ */ jsxs("div", { className: "flex h-full min-h-0 flex-col gap-4", children: [
+    /* @__PURE__ */ jsxs("div", { className: "flex shrink-0 flex-wrap items-center gap-3", children: [
       /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
-        /* @__PURE__ */ jsx("h3", { className: "text-[14px] font-medium text-text", children: "Mock server" }),
         /* @__PURE__ */ jsx(
           "span",
           {
@@ -43961,33 +44133,8 @@ function MockServerPanel({ hc }) {
         " hit",
         status.hitCount === 1 ? "" : "s"
       ] }),
-      /* @__PURE__ */ jsx("div", { className: "ml-auto flex items-center gap-2", children: status.running ? /* @__PURE__ */ jsx(
-        Button,
-        {
-          type: "button",
-          variant: "secondary",
-          disabled: busy,
-          onClick: () => void handleStop(),
-          children: "Stop"
-        }
-      ) : /* @__PURE__ */ jsx(
-        Button,
-        {
-          type: "button",
-          variant: "primary",
-          disabled: busy,
-          onClick: () => void handleStart(),
-          children: "Start"
-        }
-      ) })
-    ] }),
-    /* @__PURE__ */ jsx("div", { className: "min-h-0 flex-1 overflow-auto px-3 py-3", children: /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-4", children: [
-      error && /* @__PURE__ */ jsx(FieldError, { roleAlert: true, spacing: "section", children: error }),
-      baseUrl && /* @__PURE__ */ jsxs("p", { className: "text-[14px] text-text", role: "status", children: [
-        /* @__PURE__ */ jsxs("span", { children: [
-          "Base URL: ",
-          /* @__PURE__ */ jsx("span", { className: "font-mono", children: baseUrl })
-        ] }),
+      baseUrl && /* @__PURE__ */ jsxs("p", { className: "ml-auto text-[14px] text-text", role: "status", children: [
+        /* @__PURE__ */ jsx("span", { className: "font-mono", children: baseUrl }),
         " ",
         /* @__PURE__ */ jsx(
           "button",
@@ -44000,30 +44147,12 @@ function MockServerPanel({ hc }) {
             children: MOCK_BASE_URL_VARIABLE
           }
         )
-      ] }),
-      /* @__PURE__ */ jsx(
-        FormGroup,
-        {
-          label: "Port",
-          htmlFor: "mock-port",
-          description: "Use 0 for the first available non-privileged port.",
-          children: /* @__PURE__ */ jsx(
-            Input,
-            {
-              id: "mock-port",
-              type: "number",
-              min: 0,
-              max: 65535,
-              className: "max-w-[12rem]",
-              value: portInput,
-              disabled: status.running || busy,
-              onChange: (event) => setPortInput(event.target.value)
-            }
-          )
-        }
-      ),
-      stubs.length === 0 ? /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-3 rounded border border-separator bg-panel p-4", children: [
-        /* @__PURE__ */ jsx("p", { className: "text-[14px] text-text", children: "Add a stub to return canned responses from the mock server." }),
+      ] })
+    ] }),
+    /* @__PURE__ */ jsx("div", { className: "min-h-0 flex-1 overflow-auto", children: /* @__PURE__ */ jsxs("div", { className: "mx-auto flex h-full min-h-0 max-w-[80rem] flex-col gap-5", children: [
+      error && /* @__PURE__ */ jsx(FieldError, { roleAlert: true, spacing: "section", children: error }),
+      stubs.length === 0 ? /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-3 rounded border border-separator bg-panel p-6", children: [
+        /* @__PURE__ */ jsx("p", { className: "text-text", children: "Add a stub to return canned responses from the mock server. Start and stop the server from the footer panel." }),
         /* @__PURE__ */ jsxs("div", { className: "flex flex-wrap gap-2", children: [
           /* @__PURE__ */ jsx(
             Button,
@@ -44045,7 +44174,7 @@ function MockServerPanel({ hc }) {
             template.label
           ))
         ] })
-      ] }) : /* @__PURE__ */ jsxs("div", { className: "grid min-h-[18rem] grid-cols-1 gap-4 lg:grid-cols-2", children: [
+      ] }) : /* @__PURE__ */ jsxs("div", { className: "grid min-h-0 flex-1 grid-cols-1 gap-5 lg:grid-cols-[minmax(0,20rem)_1fr]", children: [
         /* @__PURE__ */ jsx(
           StubList,
           {
@@ -44069,6 +44198,13 @@ function MockServerPanel({ hc }) {
 }
 
 // src/renderer.tsx
+function pushFooterIndicator(hc) {
+  const status = getMockStatusStore().getSnapshot();
+  hc.ui.setFooterPanelIndicator(MOCK_SERVER_PANEL_ID, {
+    status: status.running ? "success" : "muted",
+    label: status.running ? "Mock server active" : "Mock server stopped"
+  });
+}
 function activate(hc) {
   installReact(hc.react);
   initMockState(hc);
@@ -44076,12 +44212,32 @@ function activate(hc) {
   function MockServerPanelHost() {
     return /* @__PURE__ */ jsx(MockServerPanel, { hc });
   }
+  function MockServerViewHost() {
+    return /* @__PURE__ */ jsx(MockServerView, { hc });
+  }
   hc.subscriptions.push(
     hc.ui.registerFooterPanel({
-      id: "mock-server.panel",
+      id: MOCK_SERVER_PANEL_ID,
       title: "Mock server",
-      Component: MockServerPanelHost,
-      Indicator: MockServerFooterIndicator
+      Component: MockServerPanelHost
+    })
+  );
+  pushFooterIndicator(hc);
+  const unsubscribeIndicator = getMockStatusStore().subscribe(() => {
+    pushFooterIndicator(hc);
+  });
+  hc.subscriptions.push({ dispose: unsubscribeIndicator });
+  hc.subscriptions.push({
+    dispose: () => {
+      hc.ui.setFooterPanelIndicator(MOCK_SERVER_PANEL_ID, null);
+    }
+  });
+  hc.subscriptions.push(
+    hc.ui.registerMainView({
+      id: MOCK_SERVER_VIEW_ID,
+      title: "Mock Server",
+      icon: "server",
+      Component: MockServerViewHost
     })
   );
 }

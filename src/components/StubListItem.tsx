@@ -75,6 +75,8 @@ function contentTypeSummary(stub: MockStub): string {
 
 /**
  * One selectable stub row in the mock server list.
+ * The whole row is clickable via a stretched overlay button; checkbox and
+ * action controls sit above it so they remain independently interactive.
  *
  * @param props - Component props.
  */
@@ -92,23 +94,25 @@ export function StubListItem({
 }: Props) {
   return (
     <div
-      className={`group flex items-start gap-2 rounded border px-2 py-2 ${
+      className={`group relative flex items-center gap-2 rounded border px-2 py-2 ${
         selected ? "border-accent bg-panel" : "border-separator bg-control"
       }`}
     >
+      <button
+        type="button"
+        className="absolute inset-0 cursor-pointer rounded border-0 bg-transparent p-0"
+        aria-label={`Select stub ${stub.method} ${stub.path}`}
+        aria-current={selected ? "true" : undefined}
+        onClick={onSelect}
+      />
       <input
         type="checkbox"
-        className="mt-1"
+        className="relative z-10 shrink-0"
         checked={stub.enabled}
         aria-label={`Enable stub ${stub.method} ${stub.path}`}
         onChange={(event) => onToggleEnabled(event.target.checked)}
       />
-      <button
-        type="button"
-        className="min-w-0 flex-1 cursor-pointer border-0 bg-transparent p-0 text-left"
-        aria-current={selected ? "true" : undefined}
-        onClick={onSelect}
-      >
+      <div className="relative z-10 min-w-0 flex-1 pointer-events-none">
         <div className="flex flex-wrap items-center gap-2">
           <span className="font-mono text-[14px] font-medium text-text">
             {stub.method}
@@ -121,8 +125,8 @@ export function StubListItem({
           {stub.status} · {contentTypeSummary(stub)}
           {stub.delayMs > 0 ? ` · ${stub.delayMs}ms` : ""}
         </div>
-      </button>
-      <div className="flex shrink-0 flex-col gap-1 opacity-0 focus-within:opacity-100 group-focus-within:opacity-100 group-hover:opacity-100">
+      </div>
+      <div className="relative z-10 flex shrink-0 items-center gap-2 opacity-0 focus-within:opacity-100 group-focus-within:opacity-100 group-hover:opacity-100">
         <button
           type="button"
           className="cursor-pointer border-0 bg-transparent p-0 text-[14px] text-muted hover:text-text disabled:opacity-40"
