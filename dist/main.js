@@ -1,4 +1,4 @@
-// node_modules/.pnpm/@harborclient+sdk@file+..+..+..+..+..+..+..+tmp+harborclient-sdk-1.1.27.tgz_@babel+runt_c8eb3f045fa45f80e66defb123194984/node_modules/@harborclient/sdk/dist/runtime-utils.js
+// node_modules/.pnpm/@harborclient+sdk@1.1.28_@babel+runtime@8.0.0_@codemirror+search@6.7.1_@codemirror+them_ce81a9eb3a8f24e3b98784eb554f64d8/node_modules/@harborclient/sdk/dist/runtime-utils.js
 var LOG_LEVEL_RANK = {
   debug: 0,
   info: 1,
@@ -242,74 +242,62 @@ function withPriorities(next) {
   }));
 }
 function activate(hc) {
-  hc.subscriptions.push(
-    hc.server.onRequest(async (request) => {
-      hitCount += 1;
-      const match = findMatchingStub(stubs, {
-        method: request.method,
-        path: request.path
-      });
-      if (!match) {
-        logger.info("no stub matched", request.method, request.path);
-        return notFoundResponse(request);
-      }
-      logger.info("matched stub", match.id, request.method, request.path);
-      let planned = responseFromStub(match);
-      planned = runStubScript(
-        hc,
-        "pre",
-        match.beforeScript ?? "",
-        request,
-        planned
-      );
-      planned = runStubScript(
-        hc,
-        "post",
-        match.afterScript ?? "",
-        request,
-        planned
-      );
-      return planned;
-    })
-  );
-  hc.subscriptions.push(
-    hc.ipc.handle("start", async (...args) => {
-      const payload = args[0] ?? {};
-      const port = Number(payload.port ?? 0);
-      const result = await hc.server.start({
-        port: Number.isFinite(port) ? port : 0
-      });
-      running = true;
-      listenPort = result.port;
-      hitCount = 0;
-      return currentStatus();
-    })
-  );
-  hc.subscriptions.push(
-    hc.ipc.handle("stop", async () => {
-      await hc.server.stop();
-      running = false;
-      listenPort = void 0;
-      return currentStatus();
-    })
-  );
-  hc.subscriptions.push(hc.ipc.handle("status", async () => currentStatus()));
-  hc.subscriptions.push(
-    hc.ipc.handle("getStubs", async () => withPriorities(stubs))
-  );
-  hc.subscriptions.push(
-    hc.ipc.handle("setStubs", async (...args) => {
-      const payload = args[0] ?? {};
-      stubs = withPriorities(Array.isArray(payload.stubs) ? payload.stubs : []);
-      return withPriorities(stubs);
-    })
-  );
-  hc.subscriptions.push(
-    hc.ipc.handle("resetHitCount", async () => {
-      hitCount = 0;
-      return currentStatus();
-    })
-  );
+  hc.server.onRequest(async (request) => {
+    hitCount += 1;
+    const match = findMatchingStub(stubs, {
+      method: request.method,
+      path: request.path
+    });
+    if (!match) {
+      logger.info("no stub matched", request.method, request.path);
+      return notFoundResponse(request);
+    }
+    logger.info("matched stub", match.id, request.method, request.path);
+    let planned = responseFromStub(match);
+    planned = runStubScript(
+      hc,
+      "pre",
+      match.beforeScript ?? "",
+      request,
+      planned
+    );
+    planned = runStubScript(
+      hc,
+      "post",
+      match.afterScript ?? "",
+      request,
+      planned
+    );
+    return planned;
+  });
+  hc.ipc.handle("start", async (...args) => {
+    const payload = args[0] ?? {};
+    const port = Number(payload.port ?? 0);
+    const result = await hc.server.start({
+      port: Number.isFinite(port) ? port : 0
+    });
+    running = true;
+    listenPort = result.port;
+    hitCount = 0;
+    return currentStatus();
+  });
+  hc.ipc.handle("stop", async () => {
+    await hc.server.stop();
+    running = false;
+    listenPort = void 0;
+    return currentStatus();
+  });
+  hc.ipc.handle("status", async () => currentStatus());
+  hc.ipc.handle("getStubs", async () => withPriorities(stubs));
+  hc.ipc.handle("setStubs", async (...args) => {
+    const payload = args[0] ?? {};
+    stubs = withPriorities(Array.isArray(payload.stubs) ? payload.stubs : []);
+    return withPriorities(stubs);
+  });
+  hc.ipc.handle("resetHitCount", async () => {
+    hitCount = 0;
+    return currentStatus();
+  });
 }
 async function deactivate(hc) {
   if (running) {

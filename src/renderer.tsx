@@ -1,9 +1,11 @@
-import { installReact } from "@harborclient/sdk";
 import type { PluginContext } from "@harborclient/sdk";
 import { MockServerPanel } from "./components/MockServerPanel";
 import { MockServerView } from "./components/MockServerView";
 import { MOCK_SERVER_PANEL_ID, MOCK_SERVER_VIEW_ID } from "./constants";
 import { disposeMockState, getMockStatusStore, initMockState } from "./state";
+
+/** Unsubscribe for the footer status-dot store subscription. */
+let unsubscribeIndicator: (() => void) | undefined;
 
 /**
  * Pushes the native footer status-dot state for the current mock server status.
@@ -24,10 +26,7 @@ function pushFooterIndicator(hc: PluginContext): void {
  * @param hc - Renderer plugin context from the HarborClient host.
  */
 export function activate(hc: PluginContext): void {
-  installReact(hc.react);
   initMockState(hc);
-
-  hc.subscriptions.push({ dispose: disposeMockState });
 
   /**
    * Footer panel host that closes over the plugin context.
@@ -43,31 +42,33 @@ export function activate(hc: PluginContext): void {
     return <MockServerView hc={hc} />;
   }
 
-  hc.subscriptions.push(
-    hc.ui.registerFooterPanel({
-      id: MOCK_SERVER_PANEL_ID,
-      title: "Mock server",
-      Component: MockServerPanelHost,
-    })
-  );
+  hc.ui.registerFooterPanel({
+    id: MOCK_SERVER_PANEL_ID,
+    title: "Mock server",
+    Component: MockServerPanelHost,
+  });
 
   pushFooterIndicator(hc);
-  const unsubscribeIndicator = getMockStatusStore().subscribe(() => {
+  unsubscribeIndicator = getMockStatusStore().subscribe(() => {
     pushFooterIndicator(hc);
   });
-  hc.subscriptions.push({ dispose: unsubscribeIndicator });
-  hc.subscriptions.push({
-    dispose: () => {
-      hc.ui.setFooterPanelIndicator(MOCK_SERVER_PANEL_ID, null);
-    },
-  });
 
-  hc.subscriptions.push(
-    hc.ui.registerMainView({
-      id: MOCK_SERVER_VIEW_ID,
-      title: "Mock Server",
-      icon: "server",
-      Component: MockServerViewHost,
-    } as Parameters<PluginContext["ui"]["registerMainView"]>[0])
-  );
+  hc.ui.registerMainView({
+    id: MOCK_SERVER_VIEW_ID,
+    title: "Mock Server",
+    icon: "server",
+    Component: MockServerViewHost,
+  });
+}
+
+/**
+ * Tears down renderer-side mock server state and footer indicator on deactivation.
+ *
+ * @param hc - Renderer plugin context from the HarborClient host.
+ */
+export function deactivate(hc: PluginContext): void {
+  unsubscribeIndicator?.();
+  unsubscribeIndicator = undefined;
+  hc.ui.setFooterPanelIndicator(MOCK_SERVER_PANEL_ID, null);
+  disposeMockState();
 }

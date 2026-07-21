@@ -171,81 +171,69 @@ function withPriorities(next: MockStub[]): MockStub[] {
  * @param hc - Main plugin context from the HarborClient host.
  */
 export function activate(hc: MainPluginContext): void {
-  hc.subscriptions.push(
-    hc.server.onRequest(async (request: EchoServerIncomingRequest) => {
-      hitCount += 1;
-      const match = findMatchingStub(stubs, {
-        method: request.method,
-        path: request.path,
-      });
-      if (!match) {
-        logger.info("no stub matched", request.method, request.path);
-        return notFoundResponse(request);
-      }
-      logger.info("matched stub", match.id, request.method, request.path);
+  hc.server.onRequest(async (request: EchoServerIncomingRequest) => {
+    hitCount += 1;
+    const match = findMatchingStub(stubs, {
+      method: request.method,
+      path: request.path,
+    });
+    if (!match) {
+      logger.info("no stub matched", request.method, request.path);
+      return notFoundResponse(request);
+    }
+    logger.info("matched stub", match.id, request.method, request.path);
 
-      let planned = responseFromStub(match);
-      planned = runStubScript(
-        hc,
-        "pre",
-        match.beforeScript ?? "",
-        request,
-        planned
-      );
-      planned = runStubScript(
-        hc,
-        "post",
-        match.afterScript ?? "",
-        request,
-        planned
-      );
-      return planned;
-    })
-  );
+    let planned = responseFromStub(match);
+    planned = runStubScript(
+      hc,
+      "pre",
+      match.beforeScript ?? "",
+      request,
+      planned
+    );
+    planned = runStubScript(
+      hc,
+      "post",
+      match.afterScript ?? "",
+      request,
+      planned
+    );
+    return planned;
+  });
 
-  hc.subscriptions.push(
-    hc.ipc.handle("start", async (...args: unknown[]) => {
-      const payload = (args[0] ?? {}) as { port?: number };
-      const port = Number(payload.port ?? 0);
-      const result = await hc.server.start({
-        port: Number.isFinite(port) ? port : 0,
-      });
-      running = true;
-      listenPort = result.port;
-      hitCount = 0;
-      return currentStatus();
-    })
-  );
+  hc.ipc.handle("start", async (...args: unknown[]) => {
+    const payload = (args[0] ?? {}) as { port?: number };
+    const port = Number(payload.port ?? 0);
+    const result = await hc.server.start({
+      port: Number.isFinite(port) ? port : 0,
+    });
+    running = true;
+    listenPort = result.port;
+    hitCount = 0;
+    return currentStatus();
+  });
 
-  hc.subscriptions.push(
-    hc.ipc.handle("stop", async () => {
-      await hc.server.stop();
-      running = false;
-      listenPort = undefined;
-      return currentStatus();
-    })
-  );
+  hc.ipc.handle("stop", async () => {
+    await hc.server.stop();
+    running = false;
+    listenPort = undefined;
+    return currentStatus();
+  });
 
-  hc.subscriptions.push(hc.ipc.handle("status", async () => currentStatus()));
+  hc.ipc.handle("status", async () => currentStatus());
 
-  hc.subscriptions.push(
-    hc.ipc.handle("getStubs", async () => withPriorities(stubs))
-  );
+  hc.ipc.handle("getStubs", async () => withPriorities(stubs));
 
-  hc.subscriptions.push(
-    hc.ipc.handle("setStubs", async (...args: unknown[]) => {
-      const payload = (args[0] ?? {}) as { stubs?: MockStub[] };
-      stubs = withPriorities(Array.isArray(payload.stubs) ? payload.stubs : []);
-      return withPriorities(stubs);
-    })
-  );
+  hc.ipc.handle("setStubs", async (...args: unknown[]) => {
+    const payload = (args[0] ?? {}) as { stubs?: MockStub[] };
+    stubs = withPriorities(Array.isArray(payload.stubs) ? payload.stubs : []);
+    return withPriorities(stubs);
+  });
 
-  hc.subscriptions.push(
-    hc.ipc.handle("resetHitCount", async () => {
-      hitCount = 0;
-      return currentStatus();
-    })
-  );
+  hc.ipc.handle("resetHitCount", async () => {
+    hitCount = 0;
+    return currentStatus();
+  });
 }
 
 /**
