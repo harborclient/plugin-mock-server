@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "pluginId": "com.harborclient.plugins.mock-server",
-  "pluginVersion": "1.0.2",
+  "pluginVersion": "1.0.3",
   "algorithm": "Ed25519",
   "files": [
     {
@@ -10,27 +10,27 @@
     },
     {
       "path": "dist/main.js",
-      "sha256": "b16d8d78f251d25156d5b597543460fc02c71a275622ef5ba2cbb3b0df4dab67"
+      "sha256": "9b7c8c8d11d33698276c3c9dc61cd2dd2bfdd3b579a04b834513572b8eceac87"
     },
     {
       "path": "dist/renderer.js",
-      "sha256": "fc2ba5845500e6821a2561416f1e57363c079ac9c5909e36a995459caa07a827"
+      "sha256": "9f875a9afd7bb1f20478b294d08817f09e28468048149d020c3fdb69d64766f9"
     },
     {
       "path": "manifest.json",
-      "sha256": "3fa76c824197d16f7abf8b56c634492f6d1d93e243ac26ce7466292d0aed2639"
+      "sha256": "a61d1d2f6cb67dd8bc177ec2f53f051b98738b8a7a2039faf69a051c9cb0d1c9"
     },
     {
       "path": "package.json",
-      "sha256": "21ec5cd45e4d2597fbcf8d0bb6e9a716b4becfd23b7f2f536597129185b293da"
+      "sha256": "5e1db55019497a06063707208d0f2fe9c93f21f43e54c02b7f4289e82f193130"
     },
     {
       "path": "pnpm-lock.yaml",
-      "sha256": "7ed45210744f9ec9c3cdf748c2cf2c8ed4e665162f872475f0f323a372da8cc0"
+      "sha256": "9b7e6ba31ab4b870d8af37dfd8a6b0df2f644717cb1a0537572c0b56fdb29cb8"
     },
     {
       "path": "README.md",
-      "sha256": "b504fffae4a9053162b2892b68faa803b9a2e29b5020ed6afa0c1437a86d8533"
+      "sha256": "7e97eba6ddedbd32c175c4a6b037a84cc35b1ab4fecf88472c5be0edac06cbeb"
     },
     {
       "path": "screenshot.png",
@@ -57,20 +57,24 @@
       "sha256": "654dc843dc1a8b70c0b0c6ddab7472f4eb2ebf0e52b1fbaac17d409598771a2d"
     },
     {
-      "path": "src/components/MockServerFooterIndicator.tsx",
-      "sha256": "2198304e51e7c89a814bd9911762e69a70e74c02e39919c394c8b0e94464765d"
+      "path": "src/components/MockServerPanel.tsx",
+      "sha256": "5d898fd92ffbbd469193f3f0760bfa00b4d00438fe1f5b4daaab5d753e888a35"
     },
     {
-      "path": "src/components/MockServerPanel.tsx",
-      "sha256": "ca76129d322369f7dfd9a9cfdab356dc0a2e04247e70bede0af8018cc2ec833e"
+      "path": "src/components/MockServerView.tsx",
+      "sha256": "7bac82fee5524b9851b7c53545ca1c3bd451a481d00cd4a550076c898a8f116b"
     },
     {
       "path": "src/components/RespondFields.tsx",
-      "sha256": "c8a4134c8919f79e57b436afea2cb273f967fb5a401e948cbb047741a291b2b7"
+      "sha256": "3ea3df5d374b320e20942ddc627f77e86d7654dc5d2e23cffa4c2e2c7190c87c"
+    },
+    {
+      "path": "src/components/ScriptFields.tsx",
+      "sha256": "f658c4fc572cd51abe546079e26b1ac8eda15b36145d5574f2598f7e993f3a69"
     },
     {
       "path": "src/components/StubEditor.tsx",
-      "sha256": "499025e19719f0b227776c64c8e4947c39c63f512bccbd161116c8847ae29cbb"
+      "sha256": "239d083e168b0b359ccc085a147b1e81dbf56c379657365408ebba9e50e623b0"
     },
     {
       "path": "src/components/StubList.tsx",
@@ -78,11 +82,15 @@
     },
     {
       "path": "src/components/StubListItem.tsx",
-      "sha256": "622263d0ca100bb44b8dab59118cdeba7c38ac0a455fea447b05b14ab34d5d8d"
+      "sha256": "868db3ab58f7fb28aa500955b46edc165703129f162722678a67e424b33cd734"
+    },
+    {
+      "path": "src/constants.ts",
+      "sha256": "b5b5117fc71d81b8f2d4b16e3823e151169272ca7a8760b69482e7be0eedab09"
     },
     {
       "path": "src/main.ts",
-      "sha256": "43bebb4381f86a2f8a1750b61d7189fd8dd7ad106165430bb75f72abe4754c3f"
+      "sha256": "5d335694b462e4a0330590be15ab48eb9d37655c35fb8ad878ed5f60024d5a7e"
     },
     {
       "path": "src/matchStub.test.ts",
@@ -94,15 +102,23 @@
     },
     {
       "path": "src/renderer.tsx",
-      "sha256": "aba3aaccf0d74873886e756e54549ab26628050aa601a26f68a6ea5ca86dd747"
+      "sha256": "564f93b40a9813763a70cb5f793e993e867cbc6ceb721c41b0afa998fb706f05"
+    },
+    {
+      "path": "src/scriptHelpers.test.ts",
+      "sha256": "45dad73921ba4c0ba96451dd8e2987396101636db08d2baf90651bf1062b01dc"
+    },
+    {
+      "path": "src/scriptHelpers.ts",
+      "sha256": "04e11bb21ebf0d348c138cb3997bc08cc424ed28529bb1e6694773ffebbfa88a"
     },
     {
       "path": "src/state.ts",
-      "sha256": "becf198e7b960c9e61f03bf149326168a9740a8f8b3ce2fd2b2b0989e5b7d2ac"
+      "sha256": "bcaceb896b230f94ca7e5a0c1718a6d8a983c4f134468bbedebfeced2057cc4d"
     },
     {
       "path": "src/types.ts",
-      "sha256": "316d6457f4d4d5c3066e3c3c3d5e9c1eeb340596b8f227cabe0d86ec45a06705"
+      "sha256": "f24825480e0fa27bd8aa2149a5b0a87a4193ae9be72af8bde300d48e4e446d32"
     },
     {
       "path": "tsconfig.json",
@@ -110,5 +126,5 @@
     }
   ],
   "keyId": "com.harborclient.plugins.mock-server",
-  "signature": "bq7dv2gDOlQX19kE6SQTZVeqygfkXnyfWn5gY2S90txQlNIP6lH8Yd5DpOhXpHCH4LSwJY5f4cqccgulUjl5DQ=="
+  "signature": "qFMJ4wr6BOlTXW7QDP37+UqcZryixlzRLmAMpvozmPr93cWr+1Kj1AAV2/VKrEH7qWGAckXQroKHg4X0n+c7Dw=="
 }
